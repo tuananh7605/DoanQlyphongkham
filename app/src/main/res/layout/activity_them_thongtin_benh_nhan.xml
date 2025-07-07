@@ -71,38 +71,42 @@
                 app:srcCompat="@drawable/taikhoan" />
 
             <EditText
-                android:id="@+id/Hoten"
+                android:id="@+id/editHoTen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="Họ tên bệnh nhân" />
 
             <EditText
-                android:id="@+id/SDT"
+                android:id="@+id/editSoDienThoai"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="Số điện thoại" />
 
             <EditText
+                android:id="@+id/editGioiTinh"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="Giới tính" />
 
             <EditText
+                android:id="@+id/editNgaySinh"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="Ngày sinh" />
 
             <EditText
+                android:id="@+id/editDiaChi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="Địa chỉ" />
 
             <EditText
+                android:id="@+id/editTienSuBenh"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"

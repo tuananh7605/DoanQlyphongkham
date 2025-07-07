@@ -1,23 +1,32 @@
 package com.example.doanphongkham.fragmentBacsi;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.doanphongkham.ActivityBacsi.ThemThongtinBenhNhanActivity;
+import com.example.doanphongkham.Adapter.KhachHangAdapter;
+import com.example.doanphongkham.Database.DatabaseHelper;
+import com.example.doanphongkham.Model.KhachHang;
 import com.example.doanphongkham.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.List;
 
 
 public class HoSoBenhNhanFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -25,6 +34,11 @@ public class HoSoBenhNhanFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    RecyclerView rcv;
+    KhachHangAdapter adapter;
+    List<KhachHang> khachHangList;
+    DatabaseHelper db;
+    FloatingActionButton fabAdd;
     FloatingActionButton fabAddHosobenhnhan;
     public HoSoBenhNhanFragment() {
         // Required empty public constructor
@@ -50,17 +64,58 @@ public class HoSoBenhNhanFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ho_so_benh_nhan, container, false);
 
-        FloatingActionButton fabAddHoso = view.findViewById(R.id.fabAddHosobenhnhan);
-        fabAddHoso.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), ThemThongtinBenhNhanActivity.class);
+        rcv = view.findViewById(R.id.rcvHosobenhnhan);
+        fabAdd = view.findViewById(R.id.fabAddHosobenhnhan);
+        db = new DatabaseHelper(getContext());
+
+        khachHangList = db.getAllKhachHang();
+        adapter = new KhachHangAdapter(khachHangList);
+
+        rcv.setLayoutManager(new LinearLayoutManager(getContext()));
+        rcv.setAdapter(adapter);
+
+        // Gán sự kiện xóa vào Adapter
+        adapter.setOnDeleteClickListener(khachHang -> {
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Xác nhận xoá")
+                    .setMessage("Bạn có chắc muốn xoá bệnh nhân \"" + khachHang.getTenKH() + "\"?")
+                    .setPositiveButton("Xoá", (dialog, which) -> {
+                        boolean deleted = db.deleteKhachHang(khachHang.getId());
+                        if (deleted) {
+                            // Xóa theo id để chắc chắn
+                            for (int i = 0; i < khachHangList.size(); i++) {
+                                if (khachHangList.get(i).getId() == khachHang.getId()) {
+                                    khachHangList.remove(i);
+                                    adapter.notifyItemRemoved(i);
+                                    break;
+                                }
+                            }
+                            Toast.makeText(getContext(), "Đã xoá", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Xoá thất bại", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton("Huỷ", null)
+                    .show();
+        });
+
+        // Nút thêm hồ sơ bệnh nhân
+        fabAdd.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), ThemThongtinBenhNhanActivity.class);
             startActivity(intent);
         });
 
         return view;
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Refresh danh sách sau khi thêm
+        khachHangList.clear();
+        khachHangList.addAll(db.getAllKhachHang());
+        adapter.notifyDataSetChanged();
+    }
 }

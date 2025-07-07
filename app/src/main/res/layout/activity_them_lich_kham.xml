@@ -72,10 +72,10 @@
             android:hint="Giờ khám (HH:mm)" />
 
         <EditText
-            android:id="@+id/edtTinhTrangBenh"
+            android:id="@+id/edtTienSuBenh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Tình trạng bệnh" />
+            android:hint="Tiền sử bệnh" />
 
         <EditText
             android:id="@+id/edtPhongKham"
