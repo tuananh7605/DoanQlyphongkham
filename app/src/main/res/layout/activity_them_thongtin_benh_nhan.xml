@@ -19,9 +19,11 @@
             android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="9dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -50,6 +52,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linearLayout4"
             android:layout_width="match_parent"
             android:layout_height="650dp"
             android:orientation="vertical"
@@ -62,8 +65,8 @@
                 android:id="@+id/imgAvatar"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_marginTop="10dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="10dp"
                 android:padding="8dp"
                 app:srcCompat="@drawable/taikhoan" />
 
@@ -80,27 +83,30 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="Số điện thoại" />
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="Giới tính" />
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="Ngày sinh" />
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="Địa chỉ" />
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="Tiền sử bệnh" />
-
 
 
         </LinearLayout>

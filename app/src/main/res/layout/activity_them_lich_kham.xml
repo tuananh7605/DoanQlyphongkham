@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ActivityBacsi.ThemLichKhamActivity"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/arrowback_icon" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="        THÊM LỊCH KHÁM"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnLuu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lưu" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="match_parent"
+        android:layout_height="650dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+
+        <EditText
+            android:id="@+id/edtTenBenhNhan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tên bệnh nhân" />
+
+        <EditText
+            android:id="@+id/edtNgayKham"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ngày khám (yyyy-MM-dd)" />
+
+        <EditText
+            android:id="@+id/edtGioKham"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Giờ khám (HH:mm)" />
+
+        <EditText
+            android:id="@+id/edtTinhTrangBenh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tình trạng bệnh" />
+
+        <EditText
+            android:id="@+id/edtPhongKham"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Phòng khám" />
+
+        <Button
+            android:id="@+id/btnThemLichKham"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Thêm Lịch Khám" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
