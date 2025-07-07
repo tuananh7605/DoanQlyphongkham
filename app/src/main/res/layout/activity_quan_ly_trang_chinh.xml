@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Admin.QuanLyTrangChinhActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginBottom="25dp"
+            android:src="@drawable/img" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:layout_margin="20dp"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/quanly_trangchinh_button_quanlytaikhoan"
+                android:layout_width="match_parent"
+                android:layout_height="103dp"
+                android:layout_margin="10dp"
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="@color/colorAccent"
+                android:text="Quản lý tài khoản"
+                android:textSize="15dp" />
+
+            <Button
+                android:id="@+id/quanly_trangchinh_button_quanlyKhoa"
+                android:layout_width="match_parent"
+                android:layout_height="103dp"
+                android:layout_margin="10dp"
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="@color/colorAccent"
+                android:text="Quản lý Khoa"
+                android:textSize="15dp" />
+
+            <Button
+                android:id="@+id/quanly_trangchinh_button_dangxuat"
+                android:layout_width="136dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="@color/colorAccent"
+                android:text="Đăng xuất"
+                android:textSize="15dp" />
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+</RelativeLayout>

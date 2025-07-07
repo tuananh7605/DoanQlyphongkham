@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menuitemLichkham"
+        android:icon="@drawable/timeicone"
+        android:title="Lịch khám" />
+    <item
+        android:id="@+id/menuitemLichdakham"
+        android:icon="@drawable/tickicon"
+        android:title="Đã khám" />
+    <item
+        android:id="@+id/menuitemHosobenhnhan"
+        android:icon="@drawable/benhnhan_icon"
+        android:title="Hồ sơ" />
+    <item
+        android:id="@+id/menuitemProfile"
+        android:icon="@drawable/taikhoan"
+        android:title="Tài khoản" />
+</menu>
