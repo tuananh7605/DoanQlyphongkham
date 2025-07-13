@@ -42,6 +42,19 @@ public class KhachHangAdapter extends RecyclerView.Adapter<KhachHangAdapter.Khac
             }
         });
 
+        holder.btnEdit.setOnClickListener(v -> {
+            if (editClickListener != null) {
+                editClickListener.onEditClick(kh);
+            }
+        });
+
+        holder.itemView.setOnClickListener(v -> {
+            if (itemClickListener != null) {
+                itemClickListener.onItemClick(kh);
+            }
+        });
+
+
     }
 
     @Override
@@ -52,12 +65,14 @@ public class KhachHangAdapter extends RecyclerView.Adapter<KhachHangAdapter.Khac
     public static class KhachHangViewHolder extends RecyclerView.ViewHolder {
         TextView tvTen, tvSDT, tvTienSu;
         ImageButton btnDelete;
+        ImageButton btnEdit;
         public KhachHangViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTen = itemView.findViewById(R.id.textViewTenbenhnhan);
             tvSDT = itemView.findViewById(R.id.textViewSDT);
             tvTienSu = itemView.findViewById(R.id.textViewTiensubenh);
             btnDelete = itemView.findViewById(R.id.btnDelete);
+            btnEdit = itemView.findViewById(R.id.btnEdit);
         }
     }
     public interface OnDeleteClickListener {
@@ -69,6 +84,28 @@ public class KhachHangAdapter extends RecyclerView.Adapter<KhachHangAdapter.Khac
     public void setOnDeleteClickListener(OnDeleteClickListener listener) {
         this.deleteClickListener = listener;
     }
+
+    public interface OnEditClickListener {
+        void onEditClick(KhachHang khachHang);
+    }
+
+    private OnEditClickListener editClickListener;
+
+    public void setOnEditClickListener(OnEditClickListener listener) {
+        this.editClickListener = listener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(KhachHang khachHang);
+    }
+
+    private OnItemClickListener itemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.itemClickListener = listener;
+    }
+
+
 
 }
 

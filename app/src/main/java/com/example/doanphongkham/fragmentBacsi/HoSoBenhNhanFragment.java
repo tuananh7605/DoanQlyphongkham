@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.doanphongkham.ActivityBacsi.SuaThongtinBenhNhanActivity;
 import com.example.doanphongkham.ActivityBacsi.ThemThongtinBenhNhanActivity;
 import com.example.doanphongkham.Adapter.KhachHangAdapter;
 import com.example.doanphongkham.Database.DatabaseHelper;
@@ -77,7 +78,7 @@ public class HoSoBenhNhanFragment extends Fragment {
         rcv.setLayoutManager(new LinearLayoutManager(getContext()));
         rcv.setAdapter(adapter);
 
-        // Gán sự kiện xóa vào Adapter
+        // DELETE
         adapter.setOnDeleteClickListener(khachHang -> {
             new AlertDialog.Builder(getContext())
                     .setTitle("Xác nhận xoá")
@@ -99,6 +100,34 @@ public class HoSoBenhNhanFragment extends Fragment {
                         }
                     })
                     .setNegativeButton("Huỷ", null)
+                    .show();
+        });
+
+        //UPDATE
+        adapter.setOnEditClickListener(khachHang -> {
+            Intent intent = new Intent(getContext(), SuaThongtinBenhNhanActivity.class);
+            intent.putExtra("id", khachHang.getId());
+            intent.putExtra("ten", khachHang.getTenKH());
+            intent.putExtra("sdt", khachHang.getSdt());
+            intent.putExtra("gioiTinh", khachHang.getGioiTinh());
+            intent.putExtra("ngaySinh", khachHang.getNgaySinh());
+            intent.putExtra("diaChi", khachHang.getDiaChi());
+            intent.putExtra("tienSu", khachHang.getTienSuBenh());
+            startActivity(intent);
+        });
+        //xem thong tin benh nhan
+        adapter.setOnItemClickListener(khachHang -> {
+            String message = "Họ tên: " + khachHang.getTenKH() + "\n"
+                    + "SĐT: " + khachHang.getSdt() + "\n"
+                    + "Giới tính: " + khachHang.getGioiTinh() + "\n"
+                    + "Ngày sinh: " + khachHang.getNgaySinh() + "\n"
+                    + "Địa chỉ: " + khachHang.getDiaChi() + "\n"
+                    + "Tiền sử bệnh: " + khachHang.getTienSuBenh();
+
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Thông tin bệnh nhân")
+                    .setMessage(message)
+                    .setPositiveButton("Đóng", null)
                     .show();
         });
 

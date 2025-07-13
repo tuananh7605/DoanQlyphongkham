@@ -149,6 +149,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return result > 0;
     }
+    //SUA KHACH HANG
+    public boolean updateKhachHang(int id, String ten, String sdt, String gioiTinh, String ngaySinh, String diaChi, String tienSuBenh) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("TenKH", ten);
+        values.put("SDT", sdt);
+        values.put("GioiTinh", gioiTinh);
+        values.put("NgaySinh", ngaySinh);
+        values.put("DiaChi", diaChi);
+        values.put("TienSuBenh", tienSuBenh);
+
+        int result = db.update("KhachHang", values, "id = ?", new String[]{String.valueOf(id)});
+        db.close();
+        return result > 0;
+    }
+
 
 
 }
