@@ -79,7 +79,7 @@ public class SuaThongtinBenhNhanActivity extends AppCompatActivity {
         //back
         ImageButton btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> {
-            finish(); // Quay lại màn trước đó
+            finish();
         });
 
     }

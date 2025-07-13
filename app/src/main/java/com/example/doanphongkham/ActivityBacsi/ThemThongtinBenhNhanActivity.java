@@ -64,12 +64,10 @@ public class ThemThongtinBenhNhanActivity extends AppCompatActivity {
                 String ngaySinh = editNgaySinh.getText().toString().trim();
                 String diaChi = editDiaChi.getText().toString().trim();
                 String tienSu = editTienSuBenh.getText().toString().trim();
-
                 if (hoTen.isEmpty()) {
                     Toast.makeText(ThemThongtinBenhNhanActivity.this, "Vui lòng nhập họ tên", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 boolean result = db.insertKhachHang(hoTen, sdt, gioiTinh, ngaySinh, diaChi, tienSu);
                 if (result) {
                     Toast.makeText(ThemThongtinBenhNhanActivity.this, "Thêm thành công", Toast.LENGTH_SHORT).show();

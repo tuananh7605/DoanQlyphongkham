@@ -1,5 +1,6 @@
 package com.example.doanphongkham.ActivityBacsi;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -46,6 +47,7 @@ public class ThemLichKhamActivity extends AppCompatActivity {
         databaseHelper = new DatabaseHelper(this);
 
         // Xử lý khi ấn nút
+        //Them
         btnThemLichKham.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,5 +77,41 @@ public class ThemLichKhamActivity extends AppCompatActivity {
                 }
             }
         });
+        //Sua
+        Intent intent = getIntent();
+        boolean isUpdate = intent.getBooleanExtra("isUpdate", false);
+        if (isUpdate) {
+            int id = intent.getIntExtra("id", -1);
+            String ten = intent.getStringExtra("ten");
+            String ngay = intent.getStringExtra("ngay");
+            String gio = intent.getStringExtra("gio");
+            String tienSu = intent.getStringExtra("tiensu");
+            String phong = intent.getStringExtra("phong");
+            // Set dữ liệu vào EditText
+            edtTenBenhNhan.setText(ten);
+            edtNgayKham.setText(ngay);
+            edtGioKham.setText(gio);
+            edtTienSuBenh.setText(tienSu);
+            edtPhongKham.setText(phong);
+            // Đổi text nút
+            btnThemLichKham.setText("Cập nhật");
+            // Xử lý khi nhấn nút Cập nhật
+            btnThemLichKham.setOnClickListener(v -> {
+                String tenBN = edtTenBenhNhan.getText().toString().trim();
+                String ngayKham = edtNgayKham.getText().toString().trim();
+                String gioKham = edtGioKham.getText().toString().trim();
+                String tienSuBenh = edtTienSuBenh.getText().toString().trim();
+                String phongKham = edtPhongKham.getText().toString().trim();
+
+                boolean updated = databaseHelper.updateLichKham(id, tenBN, ngayKham, gioKham, tienSuBenh, phongKham);
+                if (updated) {
+                    Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(this, "Cập nhật thất bại", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
     }
 }

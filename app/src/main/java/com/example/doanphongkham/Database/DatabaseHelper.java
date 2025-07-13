@@ -16,7 +16,7 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "PhongkhamDB";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 1;
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -97,6 +97,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         int result = db.delete("PhieuKhamBenh", "id = ?", new String[]{String.valueOf(id)});
         return result > 0;
     }
+    //SUA LICH KHAM
+    public boolean updateLichKham(int id, String tenBenhNhan, String ngayKham, String gioKham, String tienSuBenh, String phongKham) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("TenBenhNhan", tenBenhNhan);
+        values.put("NgayKham", ngayKham);
+        values.put("GioKham", gioKham);
+        values.put("TienSuBenh", tienSuBenh);
+        values.put("PhongKham", phongKham);
+
+        int result = db.update("PhieuKhamBenh", values, "id = ?", new String[]{String.valueOf(id)});
+        db.close();
+        return result > 0;
+    }
+
 
 
 
@@ -133,7 +148,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String ngaySinh = cursor.getString(4);
                 String diaChi = cursor.getString(5);
                 String tienSu = cursor.getString(6);
-
                 list.add(new KhachHang(id, ten, sdt, gioiTinh, ngaySinh, diaChi, tienSu));
             } while (cursor.moveToNext());
         }
