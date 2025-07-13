@@ -103,6 +103,42 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="16dp"
                     android:gravity="center"
+                    android:text="email NV :"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.047"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.023" />
+
+                <EditText
+                    android:id="@+id/thongtintaikhoan_textbox_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="43dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginRight="10dp"
+                    android:minHeight="48dp"
+                    android:inputType="number"
+                    android:enabled="false"
+                    android:background="@drawable/edittext_background"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.157"
+                    app:layout_constraintStart_toEndOf="@+id/textView13"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="SpeakableTextPresentCheck" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="43dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
                     android:text="SĐT:"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -112,7 +148,7 @@
                     app:layout_constraintVertical_bias="0.023" />
 
                 <EditText
-                    android:id="@+id/taotaikhoan_themthongtinnhanvien_textbox_sodienthoai"
+                    android:id="@+id/thongtintaikhoan_textbox_sodienthoai"
                     android:layout_width="match_parent"
                     android:layout_height="43dp"
                     android:layout_marginLeft="4dp"
@@ -140,7 +176,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="16dp"
                     android:gravity="center"
-                    android:text="Ngày sinh:"
+                    android:text="Ngày vào làm:"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.047"
@@ -149,14 +185,15 @@
                     app:layout_constraintVertical_bias="0.023" />
 
                 <EditText
-                    android:id="@+id/editText_ngaysinh"
+                    android:id="@+id/thongtintaikhoan_textbox_ngaysinh"
                     android:layout_width="297dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
                     android:background="@drawable/edittext_background"
                     android:clickable="true"
                     android:focusable="false"
-                    android:hint="Chọn ngày sinh"
+                    android:gravity="center"
+                    android:hint="dd/mm/yyy"
                     android:inputType="none"
                     android:padding="12dp"
                     android:textSize="16sp"
@@ -185,7 +222,7 @@
                     app:layout_constraintVertical_bias="0.023" />
 
                 <Spinner
-                    android:id="@+id/taotaikhoan_themthongtinnhanvien_spinner_gioitinh"
+                    android:id="@+id/thongtintaikhoan_spinner_gioitinh"
                     android:layout_width="match_parent"
                     android:layout_height="43dp"
                     android:layout_marginLeft="4dp"
@@ -200,40 +237,7 @@
                     tools:ignore="SpeakableTextPresentCheck" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="75dp"
-                android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="43dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="16dp"
-                    android:gravity="center"
-                    android:text="Ca Làm:"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.047"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.023" />
-
-                <Spinner
-                    android:id="@+id/taotaikhoan_themthongtinnhanvien_textbox_spinner_khoa"
-                    android:layout_width="match_parent"
-                    android:layout_height="43dp"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginRight="10dp"
-                    android:minHeight="48dp"
-                    android:background="@drawable/edittext_background"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.157"
-                    app:layout_constraintStart_toEndOf="@+id/textView13"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="SpeakableTextPresentCheck" />
-            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="206dp"
@@ -254,7 +258,7 @@
                     app:layout_constraintVertical_bias="0.023" />
 
                 <EditText
-                    android:id="@+id/taotaikhoan_themthongtinnhanvien_textbox_diachi"
+                    android:id="@+id/thongtintaikhoan_textbox_diachi"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
                     android:layout_marginLeft="4dp"
@@ -272,7 +276,7 @@
         </LinearLayout>
     </ScrollView>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/taotaikhoan_themthongtinNhanVien_button_save"
+        android:id="@+id/thongtintaikhoan_button_save"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

@@ -40,7 +40,7 @@
                     app:layout_constraintVertical_bias="0.023" />
 
                 <EditText
-                    android:id="@+id/taotaikhoan_themthongtinnhanvien_textbox_tennhanvien"
+                    android:id="@+id/thongtintaikhoan_textbox_tennhanvien"
                     android:layout_width="match_parent"
                     android:layout_height="43dp"
                     android:layout_marginLeft="4dp"
@@ -77,7 +77,7 @@
                     app:layout_constraintVertical_bias="0.023" />
 
                 <EditText
-                    android:id="@+id/taotaikhoan_themthongtinnhanvien_textbox_manhanvien"
+                    android:id="@+id/thongtintaikhoan_textbox_manhanvien"
                     android:layout_width="match_parent"
                     android:layout_height="43dp"
                     android:layout_marginLeft="4dp"
@@ -141,7 +141,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="16dp"
                     android:gravity="center"
-                    android:text="Ngày sinh:"
+                    android:text="Ngày vào làm:"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.047"
@@ -161,7 +161,7 @@
                     android:clickable="true"
                     android:background="@drawable/edittext_background"
                     android:focusable="false"
-                    android:hint="Ngày Tháng Năm Sinh dd/mm/yyy"
+                    android:hint=" dd/mm/yyy"
                     android:textSize="12sp"
                     android:gravity="center"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -210,41 +210,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="75dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="43dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="16dp"
-                    android:gravity="center"
-                    android:text="Ca Làm:"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.047"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.023" />
-
-                <Spinner
-                    android:id="@+id/taotaikhoan_themthongtinnhanvien_textbox_spinner_khoa"
-                    android:layout_width="match_parent"
-                    android:layout_height="43dp"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginRight="10dp"
-                    android:minHeight="48dp"
-                    android:background="@drawable/edittext_background"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.157"
-                    app:layout_constraintStart_toEndOf="@+id/textView13"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="SpeakableTextPresentCheck" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="206dp"
+                android:layout_height="200dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -280,7 +246,7 @@
         </LinearLayout>
     </ScrollView>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/taotaikhoan_themthongtinNhanVien_button_save"
+        android:id="@+id/taotaikhoan_themthongtinnhanvien_button_save"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

@@ -9,92 +9,70 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <!-- Search Layout -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_margin="5dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
 
             <EditText
                 android:id="@+id/quanly_trangchinh_quanlyKhoa_textbox_tim"
-                android:layout_width="288dp"
-                android:layout_height="43dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="16dp"
-                android:gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:hint="Mã Khoa, Tên Khoa, Tên Bác Sĩ"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.047"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.023" />
+                android:padding="12dp"/>
 
             <Button
                 android:id="@+id/quanly_trangchinh_quanlykhoa_button_tim"
                 android:layout_width="wrap_content"
-                android:layout_height="43dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="14dp"
-                android:layout_weight="1"
-                android:backgroundTint="@color/colorAccent"
-                android:textColor="@color/cardview_dark_background"
-                android:text="Tìm" />
+                android:layout_height="wrap_content"
+                android:text="Tìm"
+                android:backgroundTint="@color/colorAccent"/>
+        </LinearLayout>
 
+        <!--  &lt;!&ndash; Filter Layout &ndash;&gt;
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:layout_marginBottom="8dp">
 
-        </LinearLayout>
-        <LinearLayout
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="Chọn Khoa:"
+                  android:layout_gravity="center_vertical"
+                  android:layout_marginEnd="8dp"/>
+
+              <Spinner
+                  android:id="@+id/quanly_trangchinh_quanlylophocphan_spinner_chonkhoa"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"/>
+          </LinearLayout>-->
+
+        <!-- List View -->
+        <ListView
+            android:id="@+id/quanly_trangchinh_quanlyKhoa_listview_Khoa"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="43dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="16dp"
-                android:gravity="center_vertical"
-                android:text="Chọn Khoa"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.047"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.023" />
-            <Spinner
-                android:id="@+id/quanly_trangchinh_quanlylophocphan_spinner_chonkhoa"
-                android:layout_width="match_parent"
-                android:layout_height="43dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="4dp"
-                android:minHeight="48dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.157"
-                app:layout_constraintStart_toEndOf="@+id/textView13"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="SpeakableTextPresentCheck" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <ListView
-                android:id="@+id/quanly_trangchinh_quanlyKhoa_listview_Khoa"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
     </LinearLayout>
+
+    <!-- Add Button -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/quanly_trangchinh_quanlyKhoa_button_them"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="26dp"
-        android:layout_marginRight="26dp"
-        android:backgroundTint="@color/colorAccent"
-        android:clickable="true"
-        app:srcCompat="@drawable/outline_add_24" />
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/outline_add_24"
+        app:backgroundTint="@color/colorAccent"/>
 </FrameLayout>
