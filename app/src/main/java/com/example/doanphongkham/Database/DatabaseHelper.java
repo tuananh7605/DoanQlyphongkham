@@ -18,7 +18,7 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "PhongkhamDB";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION =10;
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -45,6 +45,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "DiaChi TEXT, " +
                 "TienSuBenh TEXT" +
                 ");";
+
+        String CREATE_TABLE_THUOC_KE_TOA = "CREATE TABLE ThuocKeToa (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "TenThuoc TEXT NOT NULL, " +
+                "SoLuong INTEGER, " +
+                "CachDung TEXT" +
+                ");";
+
+
         //admin
         String CREATE_TABLE_Tai_Khoan = "CREATE TABLE TaiKhoan (" +
                 "maTk  TEXT PRIMARY KEY, " +
@@ -82,10 +91,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 ");";
         db.execSQL(CREATE_TABLE_PHIEU_KHAM);
         db.execSQL(CREATE_TABLE_KHACH_HANG);
+        db.execSQL(CREATE_TABLE_THUOC_KE_TOA);
         db.execSQL(CREATE_TABLE_Tai_Khoan);
         db.execSQL(CREATE_TABLE_BAC_SI);
         db.execSQL(CREATE_TABLE_NHAN_VIEN);
         db.execSQL(CREATE_TABLE_KHOA);
+
+
     }
 
 
@@ -93,6 +105,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS PhieuKhamBenh");
         db.execSQL("DROP TABLE IF EXISTS KhachHang");
+        db.execSQL("DROP TABLE IF EXISTS THUOC_KE_TOA");
         db.execSQL("DROP TABLE IF EXISTS TaiKhoan");
         db.execSQL("DROP TABLE IF EXISTS BacSi");
         db.execSQL("DROP TABLE IF EXISTS NhanVien");
@@ -101,7 +114,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         onCreate(db);
     }
-
+    //bacsi
     //LICH KHAM
     //THEM LICH KHAM
     public boolean insertLichKham(String tenBN, String ngay, String gio, String tienSu, String phong) {
@@ -220,6 +233,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return result > 0;
     }
+
 
     //admin
     //Tai Khoan
