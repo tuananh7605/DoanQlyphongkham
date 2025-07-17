@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".KeToan.DoanhThuActivity">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quay lại"
+        android:textColor="@android:color/white"
+        android:backgroundTint="#D34747"
+        android:layout_marginBottom="12dp"
+        android:icon="@drawable/back"
+        app:iconTint="@android:color/white"
+        app:iconPadding="8dp"
+        app:iconGravity="textStart" />
+
+
+    <TextView
+        android:id="@+id/tvChonNgay"
+        android:text="Chọn ngày"
+        android:textSize="16sp"
+        android:textColor="#000000"
+        android:background="#EEEEEE"
+        android:padding="12dp"
+        android:gravity="center_vertical"
+        android:drawableEnd="@android:drawable/ic_menu_today"
+        android:drawablePadding="8dp"
+        android:layout_marginBottom="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true" />
+
+
+    <TextView
+        android:id="@+id/tvTongDoanhThu"
+        android:text="Tổng doanh thu: 0 VNĐ"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#444444"
+        android:layout_marginBottom="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewDoanhThu"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="vertical" />
+
+</LinearLayout>

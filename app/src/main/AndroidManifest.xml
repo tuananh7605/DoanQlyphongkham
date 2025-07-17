@@ -13,6 +13,18 @@
         android:theme="@style/Theme.DoanPhongkham"
         tools:targetApi="31">
         <activity
+            android:name=".KeToan.CreateInvoiceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".KeToan.DanhSachHoaDonActivity"
+            android:exported="false" />
+        <activity
+            android:name=".KeToan.DoanhThuActivity"
+            android:exported="false" />
+        <activity
+            android:name=".KeToan.MainKeToanActivity"
+            android:exported="false" />
+        <activity
             android:name=".ActivityBacsi.KhamBenhActivity"
             android:exported="false" />
         <activity
@@ -47,9 +59,6 @@
             android:exported="false" />
         <activity
             android:name=".Admin.DanhSachTaiKhoan_ThongTinActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
