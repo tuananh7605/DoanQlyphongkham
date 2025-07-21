@@ -96,166 +96,63 @@
             android:textSize="20sp" />
     </LinearLayout>
 
+    <!-- Phần giữ nguyên phía trên layout... -->
+
     <LinearLayout
         android:id="@+id/body2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/body1">
+        app:layout_constraintTop_toBottomOf="@+id/body1"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:orientation="vertical">
+        <include layout="@layout/item_thuoc_row"
+            android:id="@+id/rowThuoc1"/>
 
-            <TextView
-                android:id="@+id/textView11"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="22sp"
-                android:gravity="center"
-                android:text="Tên Thuốc" />
+        <include layout="@layout/item_thuoc_row"
+            android:id="@+id/rowThuoc2"/>
 
-            <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <Spinner
-                android:id="@+id/spinner2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <Spinner
-                android:id="@+id/spinner3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <Spinner
-                android:id="@+id/spinner4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <Spinner
-                android:id="@+id/spinner5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView12"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="22sp"
-                android:gravity="center"
-                android:text="Số Lượng" />
-
-            <EditText
-                android:id="@+id/editTextNumber2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number" />
-
-            <EditText
-                android:id="@+id/editTextNumber3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number" />
-
-            <EditText
-                android:id="@+id/editTextNumber4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number" />
-
-            <EditText
-                android:id="@+id/editTextNumber7"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number" />
-
-            <EditText
-                android:id="@+id/editTextNumber8"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tvMT"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="22sp"
-                android:gravity="center"
-                android:text="Mô Tả" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:textSize="15sp"
-                android:maxLines="10"
-                android:text="TextView" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:textSize="15sp"
-                android:maxLines="10"
-                android:text="TextView" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:textSize="15sp"
-                android:maxLines="10"
-                android:text="TextView" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:textSize="15sp"
-                android:maxLines="10"
-                android:text="TextView" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:textSize="15sp"
-                android:maxLines="10"
-                android:text="TextView" />
-
-        </LinearLayout>
+        <include layout="@layout/item_thuoc_row"
+            android:id="@+id/rowThuoc3"/>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/body2">
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textStyle="bold"
+            android:textColor="@color/red"
+            android:textSize="20sp"
+            android:text="Tổng tiền : " />
+
+        <TextView
+            android:id="@+id/tvTienKhamBenh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:text="$$$" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnKhamBenh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Xác nhận"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -94,7 +94,7 @@ public class LichkhamFragment extends Fragment {
     private void loadData() {
         List<PhieuKhamBenh> list = databaseHelper.getAllLichKham();
         if (adapter == null) {
-            adapter = new LichKhamAdapter(getContext(), list, databaseHelper);
+            adapter = new LichKhamAdapter(getContext(), list, databaseHelper,false);
             rcvLichkham.setAdapter(adapter);
         } else {
             adapter.updateList(list); // cập nhật dữ liệu mới nếu có

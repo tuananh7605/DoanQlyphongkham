@@ -9,16 +9,18 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.example.doanphongkham.Model.ChiTietKhamBenh;
 import com.example.doanphongkham.Model.KhachHang;
 import com.example.doanphongkham.Model.Khoa;
 import com.example.doanphongkham.Model.PhieuKhamBenh;
+import com.example.doanphongkham.Model.Thuoc;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "PhongkhamDB";
-    private static final int DATABASE_VERSION =10;
+    private static final int DATABASE_VERSION =20;
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -33,8 +35,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "NgayKham TEXT NOT NULL, " +
                 "GioKham TEXT NOT NULL, " +
                 "TienSuBenh TEXT, " +
-                "PhongKham TEXT" +
+                "PhongKham TEXT, " +
+                "TrangThai INTEGER DEFAULT 0" +
                 ");";
+
 
         String CREATE_TABLE_KHACH_HANG = "CREATE TABLE KhachHang (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -46,12 +50,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "TienSuBenh TEXT" +
                 ");";
 
-        String CREATE_TABLE_THUOC_KE_TOA = "CREATE TABLE ThuocKeToa (" +
+        // Tạo bảng Thuoc
+        String CREATE_TABLE_THUOC = "CREATE TABLE IF NOT EXISTS Thuoc (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "TenThuoc TEXT NOT NULL, " +
-                "SoLuong INTEGER, " +
-                "CachDung TEXT" +
+                "MoTa TEXT, " +
+                "giaTien REAL" +
                 ");";
+        String CREATE_TABLE_CHI_TIET_KHAM_BENH = "CREATE TABLE ChiTietKhamBenh (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "phieuKhamId INTEGER, " +
+                "thuocId INTEGER, " +
+                "soLuong INTEGER, " +
+                "FOREIGN KEY (phieuKhamId) REFERENCES PhieuKhamBenh(id) ON DELETE CASCADE, " +
+                "FOREIGN KEY (thuocId) REFERENCES Thuoc(id) ON DELETE CASCADE" +
+                ");";
+
+
+
+
+
 
 
         //admin
@@ -91,9 +109,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 ");";
         db.execSQL(CREATE_TABLE_PHIEU_KHAM);
         db.execSQL(CREATE_TABLE_KHACH_HANG);
-        db.execSQL(CREATE_TABLE_THUOC_KE_TOA);
+        db.execSQL(CREATE_TABLE_THUOC);
+        db.execSQL("INSERT INTO Thuoc (TenThuoc, MoTa, giaTien) VALUES ('Paracetamol', 'Giảm đau, hạ sốt', 150000);");
+        db.execSQL("INSERT INTO Thuoc (TenThuoc, MoTa, giaTien) VALUES ('Amoxicillin', 'Kháng sinh điều trị nhiễm trùng', 350000);");
+        db.execSQL("INSERT INTO Thuoc (TenThuoc, MoTa, giaTien) VALUES ('Ibuprofen', 'Giảm viêm, giảm đau', 200000);");
+        db.execSQL("INSERT INTO Thuoc (TenThuoc, MoTa, giaTien) VALUES ('Loperamide', 'Điều trị tiêu chảy', 180000);");
+        db.execSQL("INSERT INTO Thuoc (TenThuoc, MoTa, giaTien) VALUES ('Cetirizine', 'Chống dị ứng', 220000);");
+        db.execSQL(CREATE_TABLE_CHI_TIET_KHAM_BENH);
         db.execSQL(CREATE_TABLE_Tai_Khoan);
         db.execSQL(CREATE_TABLE_BAC_SI);
+
         db.execSQL(CREATE_TABLE_NHAN_VIEN);
         db.execSQL(CREATE_TABLE_KHOA);
 
@@ -105,9 +130,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS PhieuKhamBenh");
         db.execSQL("DROP TABLE IF EXISTS KhachHang");
-        db.execSQL("DROP TABLE IF EXISTS THUOC_KE_TOA");
+        db.execSQL("DROP TABLE IF EXISTS Thuoc");
         db.execSQL("DROP TABLE IF EXISTS TaiKhoan");
         db.execSQL("DROP TABLE IF EXISTS BacSi");
+        db.execSQL("DROP TABLE IF EXISTS ChiTietKhamBenh");
         db.execSQL("DROP TABLE IF EXISTS NhanVien");
         db.execSQL("DROP TABLE IF EXISTS Khoa");
 
@@ -131,27 +157,43 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1; // trả về true nếu thêm thành công
     }
     //CARDVIEW
+    // Trả về các lịch CHƯA khám (TrangThai = 0)
     public List<PhieuKhamBenh> getAllLichKham() {
         List<PhieuKhamBenh> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM PhieuKhamBenh", null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                int id = cursor.getInt(0);
-                String ten = cursor.getString(1);
-                String ngay = cursor.getString(2);
-                String gio = cursor.getString(3);
-                String tiensu = cursor.getString(4);
-                String phong = cursor.getString(5);
-
-                list.add(new PhieuKhamBenh(id, ten, ngay, gio, tiensu, phong));
-            } while (cursor.moveToNext());
+        Cursor cursor = db.rawQuery("SELECT * FROM PhieuKhamBenh WHERE TrangThai = 0", null);
+        while (cursor.moveToNext()) {
+            list.add(createPhieuKhamFromCursor(cursor));
         }
         cursor.close();
-        db.close();
         return list;
     }
+
+    // Trả về các lịch ĐÃ khám (TrangThai = 1)
+    public List<PhieuKhamBenh> getLichDaKham() {
+        List<PhieuKhamBenh> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM PhieuKhamBenh WHERE TrangThai = 1", null);
+        while (cursor.moveToNext()) {
+            list.add(createPhieuKhamFromCursor(cursor));
+        }
+        cursor.close();
+        return list;
+    }
+
+    // Hàm tiện ích dùng chung cho cả 2 hàm trên
+    private PhieuKhamBenh createPhieuKhamFromCursor(Cursor cursor) {
+        return new PhieuKhamBenh(
+                cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                cursor.getString(cursor.getColumnIndexOrThrow("TenBenhNhan")),
+                cursor.getString(cursor.getColumnIndexOrThrow("NgayKham")),
+                cursor.getString(cursor.getColumnIndexOrThrow("GioKham")),
+                cursor.getString(cursor.getColumnIndexOrThrow("TienSuBenh")),
+                cursor.getString(cursor.getColumnIndexOrThrow("PhongKham"))
+        );
+    }
+
+
     //XOA LICH KHAM
     public boolean deleteLichKham(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -172,6 +214,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return result > 0;
     }
+
     //KHACH HANG
     //THEM KHACH HANG
     public boolean insertKhachHang(String tenKH, String sdt, String gioiTinh, String ngaySinh, String diaChi, String tienSuBenh) {
@@ -233,6 +276,79 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return result > 0;
     }
+    //lay thuoc
+    public List<Thuoc> getAllThuoc() {
+        List<Thuoc> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT id, TenThuoc, MoTa, giaTien FROM Thuoc", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                list.add(new Thuoc(
+                        cursor.getInt(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getDouble(3)
+                ));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return list;
+    }
+    public boolean updateTrangThaiDaKham(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("TrangThai", 1); // 1 = đã khám
+        int rows = db.update("PhieuKhamBenh", values, "id=?", new String[]{String.valueOf(id)});
+        return rows > 0;
+    }
+    public boolean capNhatTrangThaiDaKham(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("TrangThai", 1);
+
+        int rows = db.update("PhieuKhamBenh", values, "id = ?", new String[]{String.valueOf(id)});
+        return rows > 0;
+    }
+    public List<ChiTietKhamBenh> getThuocTheoPhieuKham(int phieuKhamId) {
+        List<ChiTietKhamBenh> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM ChiTietKhamBenh WHERE phieuKhamId = ?", new String[]{String.valueOf(phieuKhamId)});
+        while (cursor.moveToNext()) {
+            list.add(new ChiTietKhamBenh(
+                    cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("phieuKhamId")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("thuocId")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("soLuong"))
+            ));
+        }
+        cursor.close();
+        return list;
+    }
+
+    public Thuoc getThuocById(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM Thuoc WHERE id = ?", new String[]{String.valueOf(id)});
+        if (cursor.moveToFirst()) {
+            Thuoc thuoc = new Thuoc(
+                    cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("TenThuoc")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("MoTa")),
+                    cursor.getDouble(cursor.getColumnIndexOrThrow("GiaTien"))
+            );
+            cursor.close();
+            return thuoc;
+        }
+        cursor.close();
+        return null;
+    }
+
+
+
+
+
 
 
     //admin

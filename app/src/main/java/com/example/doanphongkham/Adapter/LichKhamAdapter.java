@@ -1,5 +1,6 @@
 package com.example.doanphongkham.Adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -25,10 +26,13 @@ public class LichKhamAdapter extends RecyclerView.Adapter<LichKhamAdapter.LichKh
     private Context context;
     private List<PhieuKhamBenh> list;
     private DatabaseHelper databaseHelper;
-    public LichKhamAdapter(Context context, List<PhieuKhamBenh> list,DatabaseHelper db) {
+    private boolean isDaKham;
+
+    public LichKhamAdapter(Context context, List<PhieuKhamBenh> list, DatabaseHelper db, boolean isDaKham) {
         this.context = context;
         this.list = list;
         this.databaseHelper = db;
+        this.isDaKham = isDaKham;
     }
 
     @NonNull
@@ -47,6 +51,14 @@ public class LichKhamAdapter extends RecyclerView.Adapter<LichKhamAdapter.LichKh
         holder.tvNgayKham.setText("Ngày khám: " + item.getNgayKham());
         holder.tvGioKham.setText("Giờ khám: " + item.getGioKham());
         holder.tvTienSuBenh.setText("Tiền sử bệnh: " + item.getTienSuBenh());
+
+        if (isDaKham) {
+            holder.btnXoa.setVisibility(View.GONE);
+            holder.btnSua.setVisibility(View.GONE);
+        } else {
+            holder.btnXoa.setVisibility(View.VISIBLE);
+            holder.btnSua.setVisibility(View.VISIBLE);
+        }
 
         holder.btnXoa.setOnClickListener(v -> {
             boolean isDeleted = databaseHelper.deleteLichKham(item.getId());
@@ -73,15 +85,34 @@ public class LichKhamAdapter extends RecyclerView.Adapter<LichKhamAdapter.LichKh
         });
 
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, KhamBenhActivity.class);
-            intent.putExtra("id", item.getId());
-            intent.putExtra("ten", item.getTenBenhNhan());
-            intent.putExtra("ngay", item.getNgayKham());
-            intent.putExtra("gio", item.getGioKham());
-            intent.putExtra("tiensu", item.getTienSuBenh());
-            intent.putExtra("phong", item.getPhongKham());
-            context.startActivity(intent);
+            if (isDaKham) {
+                // Hiện tất cả thông tin tương tự KhamBenhActivity
+                String info = " Bệnh nhân: " + item.getTenBenhNhan() + "\n"
+                        + " Ngày khám: " + item.getNgayKham() + "\n"
+                        + " Giờ khám: " + item.getGioKham() + "\n"
+                        + " Tiền sử bệnh: " + item.getTienSuBenh() + "\n"
+                        + " Phòng khám: " + item.getPhongKham() + "\n"
+                        + " Ghi chú: Đã hoàn thành khám";
+
+                new AlertDialog.Builder(context)
+                        .setTitle("Chi tiết lịch đã khám")
+                        .setMessage(info)
+                        .setPositiveButton("Đóng", null)
+                        .show();
+
+            } else {
+                // Nếu chưa khám thì chuyển sang KhamBenhActivity
+                Intent intent = new Intent(context, KhamBenhActivity.class);
+                intent.putExtra("id", item.getId());
+                intent.putExtra("ten", item.getTenBenhNhan());
+                intent.putExtra("ngay", item.getNgayKham());
+                intent.putExtra("gio", item.getGioKham());
+                intent.putExtra("tiensu", item.getTienSuBenh());
+                intent.putExtra("phong", item.getPhongKham());
+                context.startActivity(intent);
+            }
         });
+
     }
 
     @Override
@@ -90,7 +121,7 @@ public class LichKhamAdapter extends RecyclerView.Adapter<LichKhamAdapter.LichKh
     }
 
     public class LichKhamViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTenBenhNhan, tvNgayKham, tvGioKham, tvTienSuBenh,tvPhongKham;
+        TextView tvTenBenhNhan, tvNgayKham, tvGioKham, tvTienSuBenh, tvPhongKham;
         ImageButton btnXoa;
         ImageButton btnSua;
 
@@ -103,14 +134,12 @@ public class LichKhamAdapter extends RecyclerView.Adapter<LichKhamAdapter.LichKh
             tvPhongKham = itemView.findViewById(R.id.textViewPhongKham);
             btnXoa = itemView.findViewById(R.id.btnXoalichkham);
             btnSua = itemView.findViewById(R.id.btnSualichkham);
-
         }
     }
+
     public void updateList(List<PhieuKhamBenh> newList) {
         list.clear();
         list.addAll(newList);
         notifyDataSetChanged();
     }
-
 }
-
