@@ -47,6 +47,8 @@ public class LichKhamAdapter extends RecyclerView.Adapter<LichKhamAdapter.LichKh
         PhieuKhamBenh item = list.get(position);
 
         holder.tvTenBenhNhan.setText(item.getTenBenhNhan());
+        holder.tvSdt.setText("SĐT: " + item.getSdt());
+        holder.tvNgaySinh.setText("Ngày sinh: " + item.getNgaySinh());
         holder.tvPhongKham.setText("Phòng khám: " + item.getPhongKham());
         holder.tvNgayKham.setText("Ngày khám: " + item.getNgayKham());
         holder.tvGioKham.setText("Giờ khám: " + item.getGioKham());
@@ -77,6 +79,8 @@ public class LichKhamAdapter extends RecyclerView.Adapter<LichKhamAdapter.LichKh
             intent.putExtra("isUpdate", true);
             intent.putExtra("id", item.getId());
             intent.putExtra("ten", item.getTenBenhNhan());
+            intent.putExtra("sdt", item.getSdt());
+            intent.putExtra("ngaySinh", item.getNgaySinh());
             intent.putExtra("ngay", item.getNgayKham());
             intent.putExtra("gio", item.getGioKham());
             intent.putExtra("tiensu", item.getTienSuBenh());
@@ -87,12 +91,14 @@ public class LichKhamAdapter extends RecyclerView.Adapter<LichKhamAdapter.LichKh
         holder.itemView.setOnClickListener(v -> {
             if (isDaKham) {
                 // Hiện tất cả thông tin tương tự KhamBenhActivity
-                String info = " Bệnh nhân: " + item.getTenBenhNhan() + "\n"
-                        + " Ngày khám: " + item.getNgayKham() + "\n"
-                        + " Giờ khám: " + item.getGioKham() + "\n"
-                        + " Tiền sử bệnh: " + item.getTienSuBenh() + "\n"
-                        + " Phòng khám: " + item.getPhongKham() + "\n"
-                        + " Ghi chú: Đã hoàn thành khám";
+                String info = "Bệnh nhân: " + item.getTenBenhNhan() + "\n"
+                        + "SĐT: " + item.getSdt() + "\n"
+                        + "Ngày sinh: " + item.getNgaySinh() + "\n"
+                        + "Ngày khám: " + item.getNgayKham() + "\n"
+                        + "Giờ khám: " + item.getGioKham() + "\n"
+                        + "Tiền sử bệnh: " + item.getTienSuBenh() + "\n"
+                        + "Phòng khám: " + item.getPhongKham() + "\n"
+                        + "Ghi chú: Đã hoàn thành khám";
 
                 new AlertDialog.Builder(context)
                         .setTitle("Chi tiết lịch đã khám")
@@ -105,6 +111,8 @@ public class LichKhamAdapter extends RecyclerView.Adapter<LichKhamAdapter.LichKh
                 Intent intent = new Intent(context, KhamBenhActivity.class);
                 intent.putExtra("id", item.getId());
                 intent.putExtra("ten", item.getTenBenhNhan());
+                intent.putExtra("sdt", item.getSdt());
+                intent.putExtra("ngaySinh", item.getNgaySinh());
                 intent.putExtra("ngay", item.getNgayKham());
                 intent.putExtra("gio", item.getGioKham());
                 intent.putExtra("tiensu", item.getTienSuBenh());
@@ -112,6 +120,7 @@ public class LichKhamAdapter extends RecyclerView.Adapter<LichKhamAdapter.LichKh
                 context.startActivity(intent);
             }
         });
+
 
     }
 
@@ -122,6 +131,7 @@ public class LichKhamAdapter extends RecyclerView.Adapter<LichKhamAdapter.LichKh
 
     public class LichKhamViewHolder extends RecyclerView.ViewHolder {
         TextView tvTenBenhNhan, tvNgayKham, tvGioKham, tvTienSuBenh, tvPhongKham;
+        TextView tvSdt, tvNgaySinh;
         ImageButton btnXoa;
         ImageButton btnSua;
 
@@ -134,6 +144,10 @@ public class LichKhamAdapter extends RecyclerView.Adapter<LichKhamAdapter.LichKh
             tvPhongKham = itemView.findViewById(R.id.textViewPhongKham);
             btnXoa = itemView.findViewById(R.id.btnXoalichkham);
             btnSua = itemView.findViewById(R.id.btnSualichkham);
+            tvSdt = itemView.findViewById(R.id.textViewSdt);
+            tvNgaySinh = itemView.findViewById(R.id.textViewNgaySinh);
+
+
         }
     }
 

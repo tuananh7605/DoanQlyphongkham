@@ -26,6 +26,8 @@ import java.util.List;
 
 public class KhamBenhActivity extends AppCompatActivity {
     TextView tvTenBN, tvNgayKham, tvGioKham, tvTienSuBenh, tvPhongKham;
+    TextView tvSdt, tvNgaySinh;
+
     ImageButton btnBack;
     TextView tvTienKhamBenh;
     Button btnKhamBenh;
@@ -48,11 +50,15 @@ public class KhamBenhActivity extends AppCompatActivity {
         tvPhongKham = findViewById(R.id.tvPhongKham);
         btnBack = findViewById(R.id.btnBackk);
         tvTienKhamBenh = findViewById(R.id.tvTienKhamBenh);
+        tvSdt = findViewById(R.id.tvSdt);
+        tvNgaySinh = findViewById(R.id.tvNgaySinh);
         btnKhamBenh = findViewById(R.id.btnKhamBenh);
 
         // Nhận dữ liệu
         int phieuKhamId = getIntent().getIntExtra("id", -1);
         String ten = getIntent().getStringExtra("ten");
+        String sdt = getIntent().getStringExtra("sdt");
+        String ngaySinh = getIntent().getStringExtra("ngaySinh");
         String ngay = getIntent().getStringExtra("ngay");
         String gio = getIntent().getStringExtra("gio");
         String tiensu = getIntent().getStringExtra("tiensu");
@@ -60,6 +66,8 @@ public class KhamBenhActivity extends AppCompatActivity {
 
         // Hiển thị dữ liệu
         tvTenBN.setText("Bệnh nhân: " + ten);
+        tvSdt.setText("SĐT: " + sdt);
+        tvNgaySinh.setText("Ngày sinh: " + ngaySinh);
         tvNgayKham.setText("Ngày khám: " + ngay);
         tvGioKham.setText("Giờ khám: " + gio);
         tvTienSuBenh.setText("Tiền sử bệnh: " + tiensu);
@@ -79,14 +87,19 @@ public class KhamBenhActivity extends AppCompatActivity {
         setupThuocRow(findViewById(R.id.rowThuoc3));
 
         btnKhamBenh.setOnClickListener(v -> {
-            boolean result = dbHelper.updateTrangThaiDaKham(phieuKhamId);
-            if (result) {
-                Toast.makeText(this, "Đã xác nhận khám bệnh", Toast.LENGTH_SHORT).show();
+            double tongTien = 0;
+            tongTien += getTienThuoc(findViewById(R.id.rowThuoc1));
+            tongTien += getTienThuoc(findViewById(R.id.rowThuoc2));
+            tongTien += getTienThuoc(findViewById(R.id.rowThuoc3));
+
+            boolean inserted = dbHelper.insertDaKhamXong(ten, sdt, ngaySinh, ngay, gio, tiensu, phong, tongTien);
+            if (inserted) {
+                dbHelper.updateTrangThaiDaKham(phieuKhamId);
+                Toast.makeText(this, "Khám Thành Công", Toast.LENGTH_SHORT).show();
                 finish();
-            } else {
-                Toast.makeText(this, "Xác nhận thất bại", Toast.LENGTH_SHORT).show();
             }
         });
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

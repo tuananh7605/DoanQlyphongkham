@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".ActivityBacsi.ThemThuocActivity">
+
+    <EditText
+        android:id="@+id/edtTenThuoc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tên thuốc" />
+
+    <EditText
+        android:id="@+id/edtMoTaThuoc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Mô tả" />
+
+    <EditText
+        android:id="@+id/edtGiaTienThuoc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Giá tiền"
+        android:inputType="numberDecimal" />
+
+    <Button
+        android:id="@+id/btnLuuThuoc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lưu thuốc" />
+</LinearLayout>

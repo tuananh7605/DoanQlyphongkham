@@ -9,7 +9,6 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.example.doanphongkham.Model.ChiTietKhamBenh;
 import com.example.doanphongkham.Model.KhachHang;
 import com.example.doanphongkham.Model.Khoa;
 import com.example.doanphongkham.Model.PhieuKhamBenh;
@@ -20,7 +19,7 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "PhongkhamDB";
-    private static final int DATABASE_VERSION =20;
+    private static final int DATABASE_VERSION =26;
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -32,6 +31,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String CREATE_TABLE_PHIEU_KHAM = "CREATE TABLE PhieuKhamBenh (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "TenBenhNhan TEXT NOT NULL, " +
+                "SDT TEXT, " +
+                "NgaySinh DATE, " +
                 "NgayKham TEXT NOT NULL, " +
                 "GioKham TEXT NOT NULL, " +
                 "TienSuBenh TEXT, " +
@@ -57,14 +58,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "MoTa TEXT, " +
                 "giaTien REAL" +
                 ");";
-        String CREATE_TABLE_CHI_TIET_KHAM_BENH = "CREATE TABLE ChiTietKhamBenh (" +
+
+        String CREATE_TABLE_DA_KHAM_XONG = "CREATE TABLE DaKhamXong (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "phieuKhamId INTEGER, " +
-                "thuocId INTEGER, " +
-                "soLuong INTEGER, " +
-                "FOREIGN KEY (phieuKhamId) REFERENCES PhieuKhamBenh(id) ON DELETE CASCADE, " +
-                "FOREIGN KEY (thuocId) REFERENCES Thuoc(id) ON DELETE CASCADE" +
+                "TenBenhNhan TEXT NOT NULL, " +
+                "SDT TEXT, " +
+                "NgaySinh DATE, " +
+                "NgayKham TEXT NOT NULL, " +
+                "GioKham TEXT NOT NULL, " +
+                "TienSuBenh TEXT, " +
+                "PhongKham TEXT, " +
+                "TongTien REAL DEFAULT 0" +
                 ");";
+
 
 
 
@@ -110,43 +116,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_PHIEU_KHAM);
         db.execSQL(CREATE_TABLE_KHACH_HANG);
         db.execSQL(CREATE_TABLE_THUOC);
-        db.execSQL("INSERT INTO Thuoc (TenThuoc, MoTa, giaTien) VALUES ('Paracetamol', 'Giảm đau, hạ sốt', 150000);");
-        db.execSQL("INSERT INTO Thuoc (TenThuoc, MoTa, giaTien) VALUES ('Amoxicillin', 'Kháng sinh điều trị nhiễm trùng', 350000);");
-        db.execSQL("INSERT INTO Thuoc (TenThuoc, MoTa, giaTien) VALUES ('Ibuprofen', 'Giảm viêm, giảm đau', 200000);");
-        db.execSQL("INSERT INTO Thuoc (TenThuoc, MoTa, giaTien) VALUES ('Loperamide', 'Điều trị tiêu chảy', 180000);");
-        db.execSQL("INSERT INTO Thuoc (TenThuoc, MoTa, giaTien) VALUES ('Cetirizine', 'Chống dị ứng', 220000);");
-        db.execSQL(CREATE_TABLE_CHI_TIET_KHAM_BENH);
+        db.execSQL(CREATE_TABLE_DA_KHAM_XONG);
         db.execSQL(CREATE_TABLE_Tai_Khoan);
         db.execSQL(CREATE_TABLE_BAC_SI);
-
         db.execSQL(CREATE_TABLE_NHAN_VIEN);
         db.execSQL(CREATE_TABLE_KHOA);
 
-
     }
-
-
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS PhieuKhamBenh");
         db.execSQL("DROP TABLE IF EXISTS KhachHang");
         db.execSQL("DROP TABLE IF EXISTS Thuoc");
+        db.execSQL("DROP TABLE IF EXISTS DaKhamXong");
         db.execSQL("DROP TABLE IF EXISTS TaiKhoan");
         db.execSQL("DROP TABLE IF EXISTS BacSi");
-        db.execSQL("DROP TABLE IF EXISTS ChiTietKhamBenh");
         db.execSQL("DROP TABLE IF EXISTS NhanVien");
         db.execSQL("DROP TABLE IF EXISTS Khoa");
-
 
         onCreate(db);
     }
     //bacsi
     //LICH KHAM
     //THEM LICH KHAM
-    public boolean insertLichKham(String tenBN, String ngay, String gio, String tienSu, String phong) {
+    public boolean insertLichKham(String tenBN, String sdt, String ngaySinh, String ngay, String gio, String tienSu, String phong) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("TenBenhNhan", tenBN);
+        values.put("SDT", sdt);
+        values.put("NgaySinh", ngaySinh);
         values.put("NgayKham", ngay);
         values.put("GioKham", gio);
         values.put("TienSuBenh", tienSu);
@@ -154,8 +152,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         long result = db.insert("PhieuKhamBenh", null, values);
         db.close();
-        return result != -1; // trả về true nếu thêm thành công
+        return result != -1;
     }
+
     //CARDVIEW
     // Trả về các lịch CHƯA khám (TrangThai = 0)
     public List<PhieuKhamBenh> getAllLichKham() {
@@ -187,6 +186,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.getInt(cursor.getColumnIndexOrThrow("id")),
                 cursor.getString(cursor.getColumnIndexOrThrow("TenBenhNhan")),
                 cursor.getString(cursor.getColumnIndexOrThrow("NgayKham")),
+                cursor.getString(cursor.getColumnIndexOrThrow("SDT")),
+                cursor.getString(cursor.getColumnIndexOrThrow("NgaySinh")),
                 cursor.getString(cursor.getColumnIndexOrThrow("GioKham")),
                 cursor.getString(cursor.getColumnIndexOrThrow("TienSuBenh")),
                 cursor.getString(cursor.getColumnIndexOrThrow("PhongKham"))
@@ -201,19 +202,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result > 0;
     }
     //SUA LICH KHAM
-    public boolean updateLichKham(int id, String tenBenhNhan, String ngayKham, String gioKham, String tienSuBenh, String phongKham) {
+    public boolean updateLichKham(int id, String tenBN, String ngay, String gio, String tienSu, String phong, String sdt, String ngaySinh) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("TenBenhNhan", tenBenhNhan);
-        values.put("NgayKham", ngayKham);
-        values.put("GioKham", gioKham);
-        values.put("TienSuBenh", tienSuBenh);
-        values.put("PhongKham", phongKham);
-
+        values.put("TenBenhNhan", tenBN);
+        values.put("SDT", sdt);
+        values.put("NgaySinh", ngaySinh);
+        values.put("NgayKham", ngay);
+        values.put("GioKham", gio);
+        values.put("TienSuBenh", tienSu);
+        values.put("PhongKham", phong);
         int result = db.update("PhieuKhamBenh", values, "id = ?", new String[]{String.valueOf(id)});
         db.close();
         return result > 0;
     }
+
 
     //KHACH HANG
     //THEM KHACH HANG
@@ -304,46 +307,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         int rows = db.update("PhieuKhamBenh", values, "id=?", new String[]{String.valueOf(id)});
         return rows > 0;
     }
-    public boolean capNhatTrangThaiDaKham(int id) {
+
+    public boolean insertThuoc(String ten, String moTa, double giaTien) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("TrangThai", 1);
+        values.put("TenThuoc", ten);
+        values.put("MoTa", moTa);
+        values.put("giaTien", giaTien);
+        long result = db.insert("Thuoc", null, values);
+        return result != -1;
+    }
+    public boolean insertDaKhamXong(String ten, String sdt, String ngaySinh, String ngay, String gio, String tienSu, String phong, double tongTien) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
 
-        int rows = db.update("PhieuKhamBenh", values, "id = ?", new String[]{String.valueOf(id)});
-        return rows > 0;
-    }
-    public List<ChiTietKhamBenh> getThuocTheoPhieuKham(int phieuKhamId) {
-        List<ChiTietKhamBenh> list = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM ChiTietKhamBenh WHERE phieuKhamId = ?", new String[]{String.valueOf(phieuKhamId)});
-        while (cursor.moveToNext()) {
-            list.add(new ChiTietKhamBenh(
-                    cursor.getInt(cursor.getColumnIndexOrThrow("id")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("phieuKhamId")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("thuocId")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("soLuong"))
-            ));
-        }
-        cursor.close();
-        return list;
+        values.put("TenBenhNhan", ten);
+        values.put("SDT", sdt);
+        values.put("NgaySinh", ngaySinh);
+        values.put("NgayKham", ngay);
+        values.put("GioKham", gio);
+        values.put("TienSuBenh", tienSu);
+        values.put("PhongKham", phong);
+        values.put("TongTien", tongTien);
+
+        long result = db.insert("DaKhamXong", null, values);
+        return result != -1;
     }
 
-    public Thuoc getThuocById(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM Thuoc WHERE id = ?", new String[]{String.valueOf(id)});
-        if (cursor.moveToFirst()) {
-            Thuoc thuoc = new Thuoc(
-                    cursor.getInt(cursor.getColumnIndexOrThrow("id")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("TenThuoc")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("MoTa")),
-                    cursor.getDouble(cursor.getColumnIndexOrThrow("GiaTien"))
-            );
-            cursor.close();
-            return thuoc;
-        }
-        cursor.close();
-        return null;
-    }
+
 
 
 

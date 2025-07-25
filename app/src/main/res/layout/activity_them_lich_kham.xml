@@ -55,15 +55,31 @@
             android:hint="Tên bệnh nhân" />
 
         <EditText
+            android:id="@+id/edtSDTBenhNhan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Số điện thoại"
+            android:inputType="phone" />
+
+        <EditText
+            android:id="@+id/edtNgaySinhBenhNhan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ngày sinh"
+            android:inputType="date" />
+
+        <EditText
             android:id="@+id/edtNgayKham"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="date"
             android:hint="Ngày khám (yyyy-MM-dd)" />
 
         <EditText
             android:id="@+id/edtGioKham"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="time"
             android:hint="Giờ khám (HH:mm)" />
 
         <EditText

@@ -29,7 +29,7 @@ public class CreateInvoiceActivity extends AppCompatActivity {
         // Ánh xạ view
         edtTenBenhNhan = findViewById(R.id.edtTenBenhNhan);
         edtNgaySinh = findViewById(R.id.edtNgaySinh);
-        edtSDT = findViewById(R.id.edtSDT);
+        edtSDT = findViewById(R.id.edtSDTBenhNhan);
         edtKhoaKham = findViewById(R.id.edtKhoaKham);
         edtTinhTrang = findViewById(R.id.edtTinhTrang);
         edtNgayTao = findViewById(R.id.edtNgayTao);

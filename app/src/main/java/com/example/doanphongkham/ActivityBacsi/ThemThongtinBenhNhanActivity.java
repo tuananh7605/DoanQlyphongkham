@@ -68,6 +68,14 @@ public class ThemThongtinBenhNhanActivity extends AppCompatActivity {
                     Toast.makeText(ThemThongtinBenhNhanActivity.this, "Vui lòng nhập họ tên", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if (sdt.isEmpty()) {
+                    Toast.makeText(ThemThongtinBenhNhanActivity.this, "Vui lòng nhập số điện thoại", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!sdt.matches("^0\\d{9}$")) {
+                    Toast.makeText(ThemThongtinBenhNhanActivity.this, "Số điện thoại phải bắt đầu bằng 0 và gồm 10 chữ số", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 boolean result = db.insertKhachHang(hoTen, sdt, gioiTinh, ngaySinh, diaChi, tienSu);
                 if (result) {
                     Toast.makeText(ThemThongtinBenhNhanActivity.this, "Thêm thành công", Toast.LENGTH_SHORT).show();
@@ -77,6 +85,7 @@ public class ThemThongtinBenhNhanActivity extends AppCompatActivity {
                 }
             }
         });
+
 
 
 
