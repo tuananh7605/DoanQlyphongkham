@@ -10,8 +10,7 @@ public class PhieuKhamBenh {
     private String tienSuBenh;
     private String phongKham;
 
-    public PhieuKhamBenh(int id, String tenBenhNhan, String sdt, String ngaySinh,
-                         String ngayKham, String gioKham, String tienSuBenh, String phongKham) {
+    public PhieuKhamBenh(int id, String tenBenhNhan, String sdt, String ngaySinh, String ngayKham, String gioKham, String tienSuBenh, String phongKham) {
         this.id = id;
         this.tenBenhNhan = tenBenhNhan;
         this.sdt = sdt;

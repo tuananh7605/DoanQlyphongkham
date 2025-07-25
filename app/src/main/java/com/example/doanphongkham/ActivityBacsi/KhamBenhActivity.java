@@ -43,7 +43,7 @@ public class KhamBenhActivity extends AppCompatActivity {
         setContentView(R.layout.activity_kham_benh);
 
         // Ánh xạ
-        tvTenBN = findViewById(R.id.tvTenBN);
+        tvTenBN = findViewById(R.id.tvTenBNHD);
         tvNgayKham = findViewById(R.id.tvNgayKham);
         tvGioKham = findViewById(R.id.tvGioKham);
         tvTienSuBenh = findViewById(R.id.tvTeinsubenh);
@@ -51,7 +51,7 @@ public class KhamBenhActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBackk);
         tvTienKhamBenh = findViewById(R.id.tvTienKhamBenh);
         tvSdt = findViewById(R.id.tvSdt);
-        tvNgaySinh = findViewById(R.id.tvNgaySinh);
+        tvNgaySinh = findViewById(R.id.tvNgaySinhHD);
         btnKhamBenh = findViewById(R.id.btnKhamBenh);
 
         // Nhận dữ liệu
@@ -92,7 +92,7 @@ public class KhamBenhActivity extends AppCompatActivity {
             tongTien += getTienThuoc(findViewById(R.id.rowThuoc2));
             tongTien += getTienThuoc(findViewById(R.id.rowThuoc3));
 
-            boolean inserted = dbHelper.insertDaKhamXong(ten, sdt, ngaySinh, ngay, gio, tiensu, phong, tongTien);
+            boolean inserted = dbHelper.insertDaKhamXong(ten, sdt, ngaySinh, ngay,  tiensu, phong, tongTien);
             if (inserted) {
                 dbHelper.updateTrangThaiDaKham(phieuKhamId);
                 Toast.makeText(this, "Khám Thành Công", Toast.LENGTH_SHORT).show();

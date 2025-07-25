@@ -9,6 +9,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.example.doanphongkham.Model.DaKhamXong;
 import com.example.doanphongkham.Model.KhachHang;
 import com.example.doanphongkham.Model.Khoa;
 import com.example.doanphongkham.Model.PhieuKhamBenh;
@@ -65,7 +66,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "SDT TEXT, " +
                 "NgaySinh DATE, " +
                 "NgayKham TEXT NOT NULL, " +
-                "GioKham TEXT NOT NULL, " +
                 "TienSuBenh TEXT, " +
                 "PhongKham TEXT, " +
                 "TongTien REAL DEFAULT 0" +
@@ -185,14 +185,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return new PhieuKhamBenh(
                 cursor.getInt(cursor.getColumnIndexOrThrow("id")),
                 cursor.getString(cursor.getColumnIndexOrThrow("TenBenhNhan")),
-                cursor.getString(cursor.getColumnIndexOrThrow("NgayKham")),
                 cursor.getString(cursor.getColumnIndexOrThrow("SDT")),
                 cursor.getString(cursor.getColumnIndexOrThrow("NgaySinh")),
+                cursor.getString(cursor.getColumnIndexOrThrow("NgayKham")),
                 cursor.getString(cursor.getColumnIndexOrThrow("GioKham")),
                 cursor.getString(cursor.getColumnIndexOrThrow("TienSuBenh")),
                 cursor.getString(cursor.getColumnIndexOrThrow("PhongKham"))
         );
     }
+
+
+
 
 
     //XOA LICH KHAM
@@ -317,22 +320,52 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long result = db.insert("Thuoc", null, values);
         return result != -1;
     }
-    public boolean insertDaKhamXong(String ten, String sdt, String ngaySinh, String ngay, String gio, String tienSu, String phong, double tongTien) {
+    //
+    public List<DaKhamXong> getAllDaKhamXongList() {
+        List<DaKhamXong> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM DaKhamXong", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+                String tenBenhNhan = cursor.getString(cursor.getColumnIndexOrThrow("TenBenhNhan"));
+                String sdt = cursor.getString(cursor.getColumnIndexOrThrow("SDT"));
+                String ngaySinh = cursor.getString(cursor.getColumnIndexOrThrow("NgaySinh"));
+                String ngayKham = cursor.getString(cursor.getColumnIndexOrThrow("NgayKham"));
+                String tienSuBenh = cursor.getString(cursor.getColumnIndexOrThrow("TienSuBenh"));
+                String phongKham = cursor.getString(cursor.getColumnIndexOrThrow("PhongKham"));
+                double tongTien = cursor.getDouble(cursor.getColumnIndexOrThrow("TongTien"));
+
+                DaKhamXong daKham = new DaKhamXong(id, tenBenhNhan, sdt, ngaySinh, ngayKham, tienSuBenh, phongKham, tongTien);
+                list.add(daKham);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return list;
+    }
+
+    public boolean insertDaKhamXong(String tenBenhNhan, String sdt, String ngaySinh, String ngayKham,
+                                    String tienSuBenh, String phongKham, double tongTien) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-
-        values.put("TenBenhNhan", ten);
-        values.put("SDT", sdt);
-        values.put("NgaySinh", ngaySinh);
-        values.put("NgayKham", ngay);
-        values.put("GioKham", gio);
-        values.put("TienSuBenh", tienSu);
-        values.put("PhongKham", phong);
-        values.put("TongTien", tongTien);
+        values.put("tenBenhNhan", tenBenhNhan);
+        values.put("sdt", sdt);
+        values.put("ngaySinh", ngaySinh);
+        values.put("ngayKham", ngayKham);
+        values.put("tienSuBenh", tienSuBenh);
+        values.put("phongKham", phongKham);
+        values.put("tongTien", tongTien);
 
         long result = db.insert("DaKhamXong", null, values);
         return result != -1;
     }
+
+
+
+
 
 
 

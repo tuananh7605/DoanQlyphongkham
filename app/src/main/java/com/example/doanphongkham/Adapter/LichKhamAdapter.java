@@ -45,14 +45,13 @@ public class LichKhamAdapter extends RecyclerView.Adapter<LichKhamAdapter.LichKh
     @Override
     public void onBindViewHolder(@NonNull LichKhamViewHolder holder, int position) {
         PhieuKhamBenh item = list.get(position);
-
         holder.tvTenBenhNhan.setText(item.getTenBenhNhan());
-        holder.tvSdt.setText("SĐT: " + item.getSdt());
-        holder.tvNgaySinh.setText("Ngày sinh: " + item.getNgaySinh());
         holder.tvPhongKham.setText("Phòng khám: " + item.getPhongKham());
         holder.tvNgayKham.setText("Ngày khám: " + item.getNgayKham());
         holder.tvGioKham.setText("Giờ khám: " + item.getGioKham());
         holder.tvTienSuBenh.setText("Tiền sử bệnh: " + item.getTienSuBenh());
+        holder.tvSdt.setText("SĐT: " + item.getSdt());
+        holder.tvNgaySinh.setText("Ngày sinh: " + item.getNgaySinh());
 
         if (isDaKham) {
             holder.btnXoa.setVisibility(View.GONE);
@@ -105,7 +104,6 @@ public class LichKhamAdapter extends RecyclerView.Adapter<LichKhamAdapter.LichKh
                         .setMessage(info)
                         .setPositiveButton("Đóng", null)
                         .show();
-
             } else {
                 // Nếu chưa khám thì chuyển sang KhamBenhActivity
                 Intent intent = new Intent(context, KhamBenhActivity.class);

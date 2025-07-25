@@ -7,6 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.doanphongkham.Adapter.DaKhamXongAdapter;
+import com.example.doanphongkham.Database.DatabaseHelper;
+import com.example.doanphongkham.Model.DaKhamXong;
 import com.example.doanphongkham.R;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -16,6 +19,9 @@ import java.util.List;
 public class DanhSachHoaDonActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
+    private DaKhamXongAdapter adapter1;
+    private List<DaKhamXong> hoaDonList;
+    private DatabaseHelper dbHelper;
     HoaDonAdapter adapter;
     Database db;
     FloatingActionButton btnThem;
@@ -27,9 +33,13 @@ public class DanhSachHoaDonActivity extends AppCompatActivity {
         setContentView(R.layout.activity_danh_sach_hoa_don);
 
         recyclerView = findViewById(R.id.recyclerViewHoaDon);
+        //dakhamxong
+
+
         btnThem = findViewById(R.id.btnThemHoaDon);
         btnBack = findViewById(R.id.btnBack);
         db = new Database(this);
+        dbHelper = new DatabaseHelper(this);
 
 
         btnThem.setOnClickListener(view -> {
@@ -49,10 +59,13 @@ public class DanhSachHoaDonActivity extends AppCompatActivity {
 
 
     private void loadData() {
+        hoaDonList = dbHelper.getAllDaKhamXongList();
+        adapter1 = new DaKhamXongAdapter(this, hoaDonList);
+
         List<HoaDon> list = db.getAllHoaDon();
         adapter = new HoaDonAdapter(this, list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter1);
     }
 
 

@@ -89,7 +89,7 @@ public class HoaDonAdapter extends RecyclerView.Adapter<HoaDonAdapter.HoaDonView
         public HoaDonViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTen = itemView.findViewById(R.id.tvTenBenhNhan);
-            tvNgaySinh = itemView.findViewById(R.id.tvNgaySinh);
+            tvNgaySinh = itemView.findViewById(R.id.tvNgaySinhHD);
             tvSdt = itemView.findViewById(R.id.tvSDT);
             tvKhoa = itemView.findViewById(R.id.tvKhoa);
             tvTinhTrang = itemView.findViewById(R.id.tvTinhTrang);

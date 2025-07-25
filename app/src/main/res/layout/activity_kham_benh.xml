@@ -51,7 +51,7 @@
         app:layout_constraintTop_toBottomOf="@+id/linearhead">
 
         <TextView
-            android:id="@+id/tvTenBN"
+            android:id="@+id/tvTenBNHD"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
@@ -68,7 +68,7 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/tvNgaySinh"
+            android:id="@+id/tvNgaySinhHD"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
