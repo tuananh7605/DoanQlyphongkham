@@ -78,12 +78,12 @@ public class LichKhamAdapter extends RecyclerView.Adapter<LichKhamAdapter.LichKh
             intent.putExtra("isUpdate", true);
             intent.putExtra("id", item.getId());
             intent.putExtra("ten", item.getTenBenhNhan());
-            intent.putExtra("sdt", item.getSdt());
-            intent.putExtra("ngaySinh", item.getNgaySinh());
             intent.putExtra("ngay", item.getNgayKham());
             intent.putExtra("gio", item.getGioKham());
             intent.putExtra("tiensu", item.getTienSuBenh());
             intent.putExtra("phong", item.getPhongKham());
+            intent.putExtra("sdt", item.getSdt());
+            intent.putExtra("ngaySinh", item.getNgaySinh());
             context.startActivity(intent);
         });
 
@@ -109,12 +109,12 @@ public class LichKhamAdapter extends RecyclerView.Adapter<LichKhamAdapter.LichKh
                 Intent intent = new Intent(context, KhamBenhActivity.class);
                 intent.putExtra("id", item.getId());
                 intent.putExtra("ten", item.getTenBenhNhan());
-                intent.putExtra("sdt", item.getSdt());
-                intent.putExtra("ngaySinh", item.getNgaySinh());
                 intent.putExtra("ngay", item.getNgayKham());
                 intent.putExtra("gio", item.getGioKham());
                 intent.putExtra("tiensu", item.getTienSuBenh());
                 intent.putExtra("phong", item.getPhongKham());
+                intent.putExtra("sdt", item.getSdt());
+                intent.putExtra("ngaySinh", item.getNgaySinh());
                 context.startActivity(intent);
             }
         });

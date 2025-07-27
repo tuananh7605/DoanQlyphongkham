@@ -20,7 +20,7 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "PhongkhamDB";
-    private static final int DATABASE_VERSION =26;
+    private static final int DATABASE_VERSION =32;
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -194,10 +194,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         );
     }
 
-
-
-
-
     //XOA LICH KHAM
     public boolean deleteLichKham(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -205,7 +201,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result > 0;
     }
     //SUA LICH KHAM
-    public boolean updateLichKham(int id, String tenBN, String ngay, String gio, String tienSu, String phong, String sdt, String ngaySinh) {
+    public boolean updateLichKham(int id, String tenBN, String sdt, String ngaySinh, String ngay, String gio, String tienSu, String phong) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("TenBenhNhan", tenBN);
@@ -330,14 +326,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
                 String tenBenhNhan = cursor.getString(cursor.getColumnIndexOrThrow("TenBenhNhan"));
-                String sdt = cursor.getString(cursor.getColumnIndexOrThrow("SDT"));
                 String ngaySinh = cursor.getString(cursor.getColumnIndexOrThrow("NgaySinh"));
-                String ngayKham = cursor.getString(cursor.getColumnIndexOrThrow("NgayKham"));
-                String tienSuBenh = cursor.getString(cursor.getColumnIndexOrThrow("TienSuBenh"));
+                String sdt = cursor.getString(cursor.getColumnIndexOrThrow("SDT"));
                 String phongKham = cursor.getString(cursor.getColumnIndexOrThrow("PhongKham"));
+                String tienSuBenh = cursor.getString(cursor.getColumnIndexOrThrow("TienSuBenh"));
+                String ngayKham = cursor.getString(cursor.getColumnIndexOrThrow("NgayKham"));
                 double tongTien = cursor.getDouble(cursor.getColumnIndexOrThrow("TongTien"));
 
-                DaKhamXong daKham = new DaKhamXong(id, tenBenhNhan, sdt, ngaySinh, ngayKham, tienSuBenh, phongKham, tongTien);
+                DaKhamXong daKham = new DaKhamXong(id, tenBenhNhan, ngaySinh, sdt, phongKham, tienSuBenh,ngayKham, tongTien);
                 list.add(daKham);
             } while (cursor.moveToNext());
         }
@@ -347,6 +343,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return list;
     }
 
+    //Ke Toan
     public boolean insertDaKhamXong(String tenBenhNhan, String sdt, String ngaySinh, String ngayKham,
                                     String tienSuBenh, String phongKham, double tongTien) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -358,10 +355,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put("tienSuBenh", tienSuBenh);
         values.put("phongKham", phongKham);
         values.put("tongTien", tongTien);
-
         long result = db.insert("DaKhamXong", null, values);
         return result != -1;
     }
+    public boolean deleteDaKhamXong(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int result = db.delete("DaKhamXong", "id = ?", new String[]{String.valueOf(id)});
+        db.close();
+        return result > 0;
+    }
+
+
+
+
 
 
 

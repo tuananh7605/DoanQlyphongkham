@@ -2,6 +2,7 @@ package com.example.doanphongkham.KeToan;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -46,6 +47,10 @@ public class DanhSachHoaDonActivity extends AppCompatActivity {
             Intent intent = new Intent(DanhSachHoaDonActivity.this, CreateInvoiceActivity.class);
             startActivity(intent);
         });
+        //ẩn btn them
+        FloatingActionButton btnThemHoaDon = findViewById(R.id.btnThemHoaDon);
+        btnThemHoaDon.setVisibility(View.GONE); // Ẩn nút "Thêm"
+
 
 
         btnBack.setOnClickListener(v -> {

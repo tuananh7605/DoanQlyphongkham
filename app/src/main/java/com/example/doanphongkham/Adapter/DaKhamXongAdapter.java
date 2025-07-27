@@ -1,15 +1,18 @@
 package com.example.doanphongkham.Adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.doanphongkham.Database.DatabaseHelper;
 import com.example.doanphongkham.Model.DaKhamXong;
 import com.example.doanphongkham.R;
 
@@ -20,10 +23,14 @@ public class DaKhamXongAdapter extends RecyclerView.Adapter<DaKhamXongAdapter.Vi
     private List<DaKhamXong> hoaDonList;
 
 
+    private DatabaseHelper db;
+
     public DaKhamXongAdapter(Context context, List<DaKhamXong> hoaDonList) {
         this.context = context;
         this.hoaDonList = hoaDonList;
+        this.db = new DatabaseHelper(context);
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvTenBNHD, tvNgaySinhHD, tvSDTHD, tvPhongKhamHD, tvTienSuBenhHD, tvNgayKhamHD, tvTongTienHD;
@@ -60,6 +67,32 @@ public class DaKhamXongAdapter extends RecyclerView.Adapter<DaKhamXongAdapter.Vi
         holder.tvTienSuBenhHD.setText("Tiền sử bệnh: " + hoaDon.getTienSuBenh());
         holder.tvNgayKhamHD.setText("Ngày khám: " + hoaDon.getNgayKham());
         holder.tvTongTienHD.setText("Tổng tiền: " + hoaDon.getTongTien() + " VNĐ");
+        //btn Xoa
+        holder.btnXoa.setOnClickListener(v -> {
+            DaKhamXong item = hoaDonList.get(holder.getAdapterPosition());
+
+            new AlertDialog.Builder(context)
+                    .setTitle("Xác nhận xóa")
+                    .setMessage("Bạn có chắc chắn muốn xóa hóa đơn này?")
+                    .setPositiveButton("Xóa", (dialog, which) -> {
+                        DatabaseHelper db = new DatabaseHelper(context);
+                        boolean isDeleted = db.deleteDaKhamXong(item.getId());
+                        if (isDeleted) {
+                            int pos = holder.getAdapterPosition();
+                            hoaDonList.remove(pos);
+                            notifyItemRemoved(pos);
+                            notifyItemRangeChanged(pos, hoaDonList.size());
+                            Toast.makeText(context, "Đã xóa hóa đơn", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "Xóa thất bại", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton("Hủy", null)
+                    .show();
+        });
+
+
+
     }
 
 

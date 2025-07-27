@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,121 +7,150 @@
     android:background="@color/white"
     tools:context=".fragmentBacsi.TaiKhoanBacsiFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="24dp">
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginBottom="1dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
-                android:gravity="center"
-                android:text="CHỈNH SỬA HỒ SƠ"
-                android:textColor="@color/black"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="18dp"
-                app:srcCompat="@drawable/taikhoan"
-                tools:src="@drawable/taikhoan"
-                tools:srcCompat="@drawable/taikhoan" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayout2"
+        <TextView
+            android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:text="CHỈNH SỬA HỒ SƠ"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textView4"
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="18dp"
+            app:srcCompat="@drawable/taikhoan" />
+
+        <!-- Thông tin công khai -->
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:text="THÔNG TIN CÔNG KHAI"
+            android:textColor="@color/black"
+            android:textSize="19sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edtHoTenBs"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="20dp"
+            android:background="@drawable/background_nhaptext"
+            android:drawableStart="@drawable/taikhoan"
+            android:drawablePadding="12dp"
+            android:hint="     Họ tên"
+            android:paddingStart="20dp"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/edtGioiTinhBs"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginHorizontal="20dp"
+            android:background="@drawable/background_nhaptext"
+            android:drawableStart="@drawable/taikhoan"
+            android:drawablePadding="12dp"
+            android:hint="     Giới tính"
+            android:paddingStart="20dp"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/edtSdtBs"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/background_nhaptext"
+            android:drawableStart="@drawable/taikhoan"
+            android:drawablePadding="12dp"
+            android:hint="     Số điện thoại"
+            android:paddingStart="20dp"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/edtNgaySinhBs"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/background_nhaptext"
+            android:drawableStart="@drawable/taikhoan"
+            android:drawablePadding="12dp"
+            android:hint="     Ngày sinh"
+            android:paddingStart="20dp"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/edtDiaChiBs"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/background_nhaptext"
+            android:drawableStart="@drawable/taikhoan"
+            android:drawablePadding="12dp"
+            android:hint="     Địa chỉ"
+            android:paddingStart="20dp"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/edtEmailBs"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/background_nhaptext"
+            android:drawableStart="@drawable/taikhoan"
+            android:drawablePadding="12dp"
+            android:hint="     Email"
+            android:paddingStart="20dp"
+            android:textSize="20sp" />
+        <Button
+            android:id="@+id/btnCapNhatThongTin"
+            android:layout_width="120dp"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:text="Cập nhật thông tin"
+            android:layout_marginTop="16dp"
+            android:drawablePadding="8dp"/>
+
+
+        <!-- Hai nút Thêm thuốc và Đăng xuất -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="16dp"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp">
+
+            <Button
+                android:id="@+id/btnThemThuoc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
-                android:text="THÔNG TIN CÔNG KHAI"
-                android:textColor="@color/black"
-                android:textSize="19sp"
-                android:textStyle="bold" />
+                android:text="Thêm thuốc" />
 
-            <EditText
-                android:id="@+id/editTextHotenBacsi"
+            <Button
+                android:id="@+id/btnDangXuatBacSi"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/background_nhaptext"
-                android:drawableStart="@drawable/taikhoan"
-                android:hint="     Ho tên"
-                android:paddingStart="20dp"
-                android:textSize="20sp" />
-
-            <EditText
-                android:id="@+id/editTextSDTBacsi"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/background_nhaptext"
-                android:drawableStart="@drawable/taikhoan"
-                android:hint="     Số điện thoại"
-                android:paddingStart="20dp"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/buttonCapnhattenbacsi"
-                android:layout_width="120dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/background_capnhatthongtin"
-                android:gravity="center"
-                android:text="Cập nhật"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Đăng xuất" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btnDangXuatBacSi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Đăng xuất"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/btnThemThuoc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Thêm thuốc"
-            app:layout_constraintBottom_toTopOf="@+id/btnDangXuatBacSi"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
+    </LinearLayout>
+</ScrollView>

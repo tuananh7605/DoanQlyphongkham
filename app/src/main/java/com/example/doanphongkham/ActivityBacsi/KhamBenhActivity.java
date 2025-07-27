@@ -91,7 +91,6 @@ public class KhamBenhActivity extends AppCompatActivity {
             tongTien += getTienThuoc(findViewById(R.id.rowThuoc1));
             tongTien += getTienThuoc(findViewById(R.id.rowThuoc2));
             tongTien += getTienThuoc(findViewById(R.id.rowThuoc3));
-
             boolean inserted = dbHelper.insertDaKhamXong(ten, sdt, ngaySinh, ngay,  tiensu, phong, tongTien);
             if (inserted) {
                 dbHelper.updateTrangThaiDaKham(phieuKhamId);
