@@ -119,6 +119,10 @@ public class DanhSachTaiKhoan_ThongTinActivity extends AppCompatActivity {
                 ma = intent.getStringExtra("MA_NV");
                 loaiTaiKhoan = "Nhân viên";
                 loadNhanVienInfo();
+            } else if (intent.hasExtra("MA_KT")) {
+                ma = intent.getStringExtra("MA_KT");
+                loaiTaiKhoan = "Kế Toán";
+                loadKeToanInfo(); // Gọi phương thức để tải thông tin kế toán
             }
         }
     }
@@ -149,6 +153,29 @@ public class DanhSachTaiKhoan_ThongTinActivity extends AppCompatActivity {
     private void loadNhanVienInfo() {
         Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(
                 "SELECT * FROM NhanVien WHERE maNV = ?", new String[]{ma});
+
+        if (cursor.moveToFirst()) {
+            edtMaNV.setText(cursor.getString(0));
+            edtTenNV.setText(cursor.getString(1));
+
+            // Set gender spinner
+            String gioiTinh = cursor.getString(2);
+            if (gioiTinh != null) {
+                int spinnerPosition = ((ArrayAdapter)spinnerGioiTinh.getAdapter()).getPosition(gioiTinh);
+                spinnerGioiTinh.setSelection(spinnerPosition);
+            }
+
+            edtSDT.setText(cursor.getString(3));
+            edtNgaySinh.setText(cursor.getString(4));
+            edtDiaChi.setText(cursor.getString(5));
+            edtEmail.setText(cursor.getString(6));
+        }
+        cursor.close();
+    }
+
+    private void loadKeToanInfo() {
+        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(
+                "SELECT * FROM KeToan WHERE maKT = ?", new String[]{ma}); // Thay đổi tên bảng cho đúng
 
         if (cursor.moveToFirst()) {
             edtMaNV.setText(cursor.getString(0));
@@ -212,6 +239,16 @@ public class DanhSachTaiKhoan_ThongTinActivity extends AppCompatActivity {
                     email,
                     gioiTinh
             );
+        } else if (loaiTaiKhoan.equals("Kế Toán")) {
+            result = databaseHelper.updateKeToan( // Thêm logic cập nhật cho Kế Toán
+                    ma,
+                    ten,
+                    diaChi,
+                    ngaySinh,
+                    sdt,
+                    email,
+                    gioiTinh
+            );
         } else {
             result = databaseHelper.updateNhanVien(
                     ma,
@@ -240,6 +277,8 @@ public class DanhSachTaiKhoan_ThongTinActivity extends AppCompatActivity {
             boolean result;
             if (loaiTaiKhoan.equals("Bác sĩ")) {
                 result = databaseHelper.deleteBacSi(ma);
+            } else if (loaiTaiKhoan.equals("Kế Toán")) {
+                result = databaseHelper.deleteKeToan(ma); // Thêm logic xóa cho Kế Toán
             } else {
                 result = databaseHelper.deleteNhanVien(ma);
             }

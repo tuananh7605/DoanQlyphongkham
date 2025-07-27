@@ -35,7 +35,7 @@ public class QuanLyTaiKhoan_TaoTaiKhoanActivity extends AppCompatActivity {
     private Button taotaikhoan_button_taomail;
     private FloatingActionButton taotaikhoan_button_next;
 
-    private final String[] ds_loai = {"Chưa chọn", "Bác Sĩ", "Nhân Viên"};
+    private final String[] ds_loai = {"Chưa chọn", "Bác Sĩ", "Nhân Viên", "Kế Toán"};
     private final ArrayList<String> maList = new ArrayList<>();
 
     @Override
@@ -71,7 +71,7 @@ public class QuanLyTaiKhoan_TaoTaiKhoanActivity extends AppCompatActivity {
                 resetFormFields();
                 String selectedType = taotaikhoan_spinner_loaitaikhoan.getSelectedItem().toString();
 
-                if (selectedType.equals("Nhân Viên") || selectedType.equals("Bác Sĩ")) {
+                if (selectedType.equals("Nhân Viên") || selectedType.equals("Bác Sĩ")|| selectedType.equals("Kế Toán")) {
                     taotaikhoan_textbox_mataikhoan.setText(generateAccountCode(selectedType));
                     taotaikhoan_button_next.setImageResource(R.drawable.baseline_navigate_next_24);
                     taotaikhoan_textbox_mataikhoan.setEnabled(false);
@@ -156,18 +156,18 @@ public class QuanLyTaiKhoan_TaoTaiKhoanActivity extends AppCompatActivity {
             taotaikhoan_textbox_mail.setText(ten + ma + "@nv.gmail.com");
         } else if (loai.equals("Bác Sĩ")) {
             taotaikhoan_textbox_mail.setText(ten + ma + "@bs.gmail.com");
+        }else if (loai.equals("Kế Toán")) {
+            taotaikhoan_textbox_mail.setText(ten + ma + "@kt.gmail.com");
         }
     }
 
     private String generateAccountCode(String accountType) {
-        String prefix = accountType.equals("Bác Sĩ") ? "BS" : "NV";
-        String columnName = accountType.equals("Bác Sĩ") ? "maBS" : "maNV";
-        String tableName = accountType.equals("Bác Sĩ") ? "BacSi" : "NhanVien";
+        String prefix = accountType.equals("Bác Sĩ") ? "BS" : accountType.equals("Kế Toán") ? "KT" : "NV";
+        String columnName = accountType.equals("Bác Sĩ") ? "maBS" : accountType.equals("Kế Toán") ? "maKT" : "maNV";
+        String tableName = accountType.equals("Bác Sĩ") ? "BacSi" : accountType.equals("Kế Toán") ? "KeToan" : "NhanVien";
         int maxNumber = 0;
-
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT " + columnName + " FROM " + tableName, null);
-
         while (cursor.moveToNext()) {
             String existingCode = cursor.getString(0);
             if (existingCode.startsWith(prefix)) {
@@ -179,10 +179,8 @@ public class QuanLyTaiKhoan_TaoTaiKhoanActivity extends AppCompatActivity {
         }
         cursor.close();
         db.close();
-
         return prefix + String.format("%05d", maxNumber + 1);
     }
-
     private void processAccountCreation() {
         String loai = taotaikhoan_spinner_loaitaikhoan.getSelectedItem().toString();
         String ten = taotaikhoan_textbox_tentaikhoan.getText().toString().trim();
@@ -210,19 +208,15 @@ public class QuanLyTaiKhoan_TaoTaiKhoanActivity extends AppCompatActivity {
 
     private boolean isCodeExists(String code, String accountType) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String tableName = accountType.equals("Bác Sĩ") ? "BacSi" : "NhanVien";
-        String columnName = accountType.equals("Bác Sĩ") ? "maBS" : "maNV";
-
+        String tableName = accountType.equals("Bác Sĩ") ? "BacSi" : accountType.equals("Kế Toán") ? "KeToan" : "NhanVien";
+        String columnName = accountType.equals("Bác Sĩ") ? "maBS" : accountType.equals("Kế Toán") ? "maKT" : "maNV";
         Cursor cursor = db.rawQuery("SELECT " + columnName + " FROM " + tableName + " WHERE " + columnName + " = ?",
                 new String[]{code});
-
         boolean exists = cursor.getCount() > 0;
         cursor.close();
         db.close();
-
         return exists;
     }
-
     private void navigateToDetailActivity(String accountType, String code, String name, String email, String password) {
         // Thêm kiểm tra null trước khi truyền dữ liệu
         if (code == null || name == null || email == null || password == null) {

@@ -18,6 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="8dp">
 
             <EditText
@@ -25,7 +26,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Mã Khoa, Tên Khoa, Tên Bác Sĩ"
+                android:hint="Tên Khoa"
                 android:padding="12dp"/>
 
             <Button

@@ -3,7 +3,6 @@ package com.example.doanphongkham.Admin;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -13,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.doanphongkham.Adapter.KhoaAdapter;
 import com.example.doanphongkham.Database.DatabaseHelper;
+import com.example.doanphongkham.Model.Khoa; // Import lớp Khoa
 import com.example.doanphongkham.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -55,11 +55,11 @@ public class QuanLyKhoaActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        loadDanhSachKhoa();
+        loadDanhSachKhoa(); // Tải lại danh sách khi quay lại activity
     }
 
     private void loadDanhSachKhoa() {
-        List<DatabaseHelper.KhoaWithBacSi> listKhoa = dbHelper.getAllKhoaWithBacSi();
+        List<Khoa> listKhoa = dbHelper.getAllKhoa(); // Lấy List<Khoa>
         if (adapter == null) {
             adapter = new KhoaAdapter(this, listKhoa);
             lvKhoa.setAdapter(adapter);
@@ -71,27 +71,28 @@ public class QuanLyKhoaActivity extends AppCompatActivity {
 
     private void setupItemClickListener() {
         lvKhoa.setOnItemClickListener((parent, view, position, id) -> {
-            DatabaseHelper.KhoaWithBacSi khoa = (DatabaseHelper.KhoaWithBacSi) parent.getItemAtPosition(position);
+            Khoa khoa = (Khoa) parent.getItemAtPosition(position); // Ép kiểu về Khoa
             Intent intent = new Intent(QuanLyKhoaActivity.this, QuanLyKhoa_SuaActivity.class);
-            intent.putExtra("MA_KHOA", khoa.getMaKhoa());
+            intent.putExtra("MA_KHOA_ID", khoa.getId()); // Truyền ID là int
             intent.putExtra("TEN_KHOA", khoa.getTenKhoa());
-            intent.putExtra("MA_BS", khoa.getMaBS());
             intent.putExtra("MO_TA", khoa.getMoTa());
+            intent.putExtra("GIA_TIEN", khoa.getGiaTien()); // Truyền giá tiền
             startActivity(intent);
         });
     }
 
     private void timKiemKhoa() {
         String keyword = edtTimKiem.getText().toString().trim();
+        List<Khoa> ketQua;
         if (keyword.isEmpty()) {
-            loadDanhSachKhoa();
-            return;
+            ketQua = dbHelper.getAllKhoa(); // Nếu rỗng thì hiển thị tất cả
+        } else {
+            ketQua = dbHelper.timKiemKhoa(keyword); // Tìm kiếm theo từ khóa
         }
 
-        List<DatabaseHelper.KhoaWithBacSi> ketQua = dbHelper.timKiemKhoa(keyword);
         if (ketQua.isEmpty()) {
             Toast.makeText(this, "Không tìm thấy kết quả", Toast.LENGTH_SHORT).show();
-            adapter.updateData(new ArrayList<>());
+            adapter.updateData(new ArrayList<>()); // Xóa dữ liệu cũ trên ListView
         } else {
             adapter.updateData(ketQua);
         }

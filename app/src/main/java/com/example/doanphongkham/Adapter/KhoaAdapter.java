@@ -7,51 +7,51 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.example.doanphongkham.Database.DatabaseHelper;
+import com.example.doanphongkham.Model.Khoa; // Import lớp Khoa
 import com.example.doanphongkham.R;
 
 import java.util.List;
 
-public class KhoaAdapter extends ArrayAdapter<DatabaseHelper.KhoaWithBacSi> {
+public class KhoaAdapter extends ArrayAdapter<Khoa> { // Sử dụng Khoa thay vì KhoaWithBacSi
     private Context context;
-    private List<DatabaseHelper.KhoaWithBacSi> listKhoa;
+    private List<Khoa> khoaList;
 
-    public KhoaAdapter(@NonNull Context context, List<DatabaseHelper.KhoaWithBacSi> listKhoa) {
-        super(context, R.layout.item_khoa, listKhoa);
+    public KhoaAdapter(Context context, List<Khoa> khoaList) {
+        super(context, 0, khoaList);
         this.context = context;
-        this.listKhoa = listKhoa;
+        this.khoaList = khoaList;
     }
 
-    @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View view = convertView;
-        if (view == null) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            view = inflater.inflate(R.layout.item_khoa, parent, false);
+    public View getView(int position, View convertView, ViewGroup parent) {
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_khoa, parent, false); // Giả định layout item_khoa
         }
 
-        DatabaseHelper.KhoaWithBacSi khoa = listKhoa.get(position);
+        Khoa currentKhoa = khoaList.get(position);
 
-        TextView tvMaKhoa = view.findViewById(R.id.tvMaKhoa);
-        TextView tvTenKhoa = view.findViewById(R.id.tvTenKhoa);
-        TextView tvBacSi = view.findViewById(R.id.tvBacSi);
-        TextView tvMoTa = view.findViewById(R.id.tvMoTa);
+        TextView tvTenKhoa = convertView.findViewById(R.id.tv_ten_khoa); // Giả định ID TextView
+        TextView tvMoTa = convertView.findViewById(R.id.tv_mo_ta); // Giả định ID TextView
+        TextView tvGiaTien = convertView.findViewById(R.id.tv_gia_tien); // Giả định ID TextView
 
-        tvMaKhoa.setText("Mã khoa: " + khoa.getMaKhoa());
-        tvTenKhoa.setText("Tên khoa: " + khoa.getTenKhoa());
-        tvBacSi.setText("Bác sĩ: " + (khoa.getTenBS() != null ? khoa.getTenBS() : "Chưa có"));
-        tvMoTa.setText("Mô tả: " + khoa.getMoTa());
+        // Thiết lập dữ liệu cho các TextView
+        if (tvTenKhoa != null) {
+            tvTenKhoa.setText(currentKhoa.getTenKhoa());
+        }
+        if (tvMoTa != null) {
+            tvMoTa.setText(currentKhoa.getMoTa());
+        }
+        if (tvGiaTien != null) {
+            tvGiaTien.setText(String.format("Giá: %.0f VNĐ", currentKhoa.getGiaTien()));
+        }
 
-        return view;
+        return convertView;
     }
 
-    public void updateData(List<DatabaseHelper.KhoaWithBacSi> newList) {
-        this.listKhoa.clear();
-        this.listKhoa.addAll(newList);
+    // Phương thức cập nhật dữ liệu
+    public void updateData(List<Khoa> newList) {
+        khoaList.clear();
+        khoaList.addAll(newList);
         notifyDataSetChanged();
     }
 }

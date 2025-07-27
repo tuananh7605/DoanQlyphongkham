@@ -20,7 +20,7 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "PhongkhamDB";
-    private static final int DATABASE_VERSION =32;
+    private static final int DATABASE_VERSION =33;
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -74,10 +74,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
 
-
-
-
-
         //admin
         String CREATE_TABLE_Tai_Khoan = "CREATE TABLE TaiKhoan (" +
                 "maTk  TEXT PRIMARY KEY, " +
@@ -97,6 +93,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "email TEXT UNIQUE" +
                 ");";
 
+        String CREATE_TABLE_KE_TOAN = "CREATE TABLE KeToan (" +
+                "maKT  TEXT PRIMARY KEY, " +
+                "tenKT  TEXT NOT NULL, " +
+                "gioitinh TEXT, " +
+                "sdt TEXT, " +
+                "NgaySinh DATE, " +
+                "diachi TEXT," +
+                "email TEXT UNIQUE" +
+                ");";
+
         String CREATE_TABLE_NHAN_VIEN = "CREATE TABLE NhanVien (" +
                 "maNV TEXT PRIMARY KEY, " +
                 "tenNV TEXT NOT NULL, " +
@@ -107,12 +113,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "email TEXT UNIQUE" +
                 ");";
         String CREATE_TABLE_KHOA = "CREATE TABLE Khoa (" +
-                "maKhoa TEXT PRIMARY KEY, " +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "tenKhoa TEXT NOT NULL, " +
-                "maBS TEXT, " +
-                "moTa TEXT, " +
-                "FOREIGN KEY (maBS) REFERENCES BacSi(maBS) ON DELETE SET NULL" +
+                "giatien REAL, " +
+                "moTa TEXT " +
                 ");";
+        db.execSQL(CREATE_TABLE_KE_TOAN);
         db.execSQL(CREATE_TABLE_PHIEU_KHAM);
         db.execSQL(CREATE_TABLE_KHACH_HANG);
         db.execSQL(CREATE_TABLE_THUOC);
@@ -133,7 +139,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS BacSi");
         db.execSQL("DROP TABLE IF EXISTS NhanVien");
         db.execSQL("DROP TABLE IF EXISTS Khoa");
-
+db.execSQL("DROP TABLE IF EXISTS KeToan");
         onCreate(db);
     }
     //bacsi
@@ -597,6 +603,85 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return result > 0;
     }
+
+    //Thêm Ke Toan
+    public boolean insertKeToan(String maKT, String tenKT, String gioiTinh,
+                               String sdt, String ngaySinh, String diaChi, String email) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put("maKT", maKT);
+        values.put("tenKT", tenKT);
+        values.put("gioiTinh", gioiTinh);
+        values.put("sdt", sdt);
+        values.put("ngaySinh", ngaySinh);
+        values.put("diaChi", diaChi);
+        values.put("email", email);
+
+        long result = db.insert("keToan", null, values);
+        db.close();
+        return result != -1; // Trả về true nếu insert thành công
+    }
+    //Lấy danh sách Kế Toán
+    public List<String> getAllKeToan() {
+        List<String> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT maKT || ' - ' || tenKT FROM keToan", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                list.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return list;
+    }
+    // Delete Bác Sĩ
+    public boolean deleteKeToan(String maKT) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+
+        try {
+            // Lấy email (không đóng db trong getEmailFromMaBS)
+            String email = getEmailFromMaBS(maKT);
+
+            // Xóa bác sĩ
+            int deletedRows = db.delete("keToan", "maKT = ?", new String[]{maKT});
+            boolean success = deletedRows > 0;
+
+            // Xóa tài khoản nếu cần
+            if (success && email != null) {
+                db.delete("TaiKhoan", "mail = ?", new String[]{email});
+            }
+
+            db.setTransactionSuccessful();
+            return success;
+        } catch (Exception e) {
+            Log.e("Database", "Error deleting doctor", e);
+            return false;
+        } finally {
+            try {
+                db.endTransaction();
+            } finally {
+                db.close(); // Đóng db ở đây sau khi kết thúc mọi thao tác
+            }
+        }
+    }
+    //Cập nhật bác sĩ
+    public boolean updateKeToan(String maKT, String tenKT,String diachi, String ngaySinh,String sdt, String email,String gioitinh) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("tenKT", tenKT);
+        values.put("sdt", sdt);
+        values.put("gioitinh", gioitinh);
+        values.put("ngaySinh", ngaySinh);
+        values.put("email", email);
+        values.put("diachi", diachi);
+        int result = db.update("keToan", values, "maKT = ?", new String[]{maKT});
+        db.close();
+        return result > 0;
+    }
 // Trong DatabaseHelper.java
 
     // Lấy thông tin nhân viên từ mã tài khoản
@@ -658,180 +743,93 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    // Lấy danh sách bác sĩ cho Spinner
-    public List<BacSiSpinner> getAllBacSiForSpinner() {
-        List<BacSiSpinner> list = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT maBS, tenBS FROM BacSi", null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                list.add(new BacSiSpinner(
-                        cursor.getString(0), // maBS
-                        cursor.getString(1)  // tenBS
-                ));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        db.close();
-        return list;
-    }
-
-    // Tạo mã khoa tự động
-    public String generateMaKhoa() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String maKhoa = "KH001"; // Mã mặc định
-
-        Cursor cursor = db.rawQuery("SELECT maKhoa FROM Khoa ORDER BY maKhoa DESC LIMIT 1", null);
-        if (cursor.moveToFirst()) {
-            String lastMaKhoa = cursor.getString(0);
-            int number = Integer.parseInt(lastMaKhoa.substring(2)) + 1;
-            maKhoa = "KH" + String.format("%03d", number);
-        }
-        cursor.close();
-        db.close();
-        return maKhoa;
-    }
-
     // Thêm khoa mới
-    public boolean insertKhoa(String maKhoa, String tenKhoa, String maBS, String moTa) {
+    public boolean insertKhoa(String tenKhoa, String moTa, double giaTien) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-
-        values.put("maKhoa", maKhoa);
         values.put("tenKhoa", tenKhoa);
-        values.put("maBS", maBS);
         values.put("moTa", moTa);
-
+        values.put("giatien", giaTien);  // Lưu ý: tên cột trong bảng là "giatien"
         long result = db.insert("Khoa", null, values);
         db.close();
         return result != -1;
     }
-
     // Lấy thông tin 1 khoa
-    public Khoa getKhoaByMa(String maKhoa) {
+    public Khoa getKhoaById(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Khoa khoa = null;
-
         Cursor cursor = db.query("Khoa",
-                new String[]{"maKhoa", "tenKhoa", "maBS", "moTa"},
-                "maKhoa = ?", new String[]{maKhoa},
+                new String[]{"id", "tenKhoa", "moTa", "giatien"}, // Lấy tất cả các cột cần thiết
+                "id = ?", new String[]{String.valueOf(id)}, // Tìm kiếm theo ID
                 null, null, null);
-
         if (cursor.moveToFirst()) {
             khoa = new Khoa(
-                    cursor.getString(0),
-                    cursor.getString(1),
-                    cursor.getString(2),
-                    cursor.getString(3)
+                    cursor.getInt(cursor.getColumnIndexOrThrow("id")), // Lấy ID
+                    cursor.getString(cursor.getColumnIndexOrThrow("tenKhoa")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("moTa")),
+                    cursor.getDouble(cursor.getColumnIndexOrThrow("giatien"))
             );
         }
-
         cursor.close();
         db.close();
         return khoa;
     }
-
     // Cập nhật thông tin khoa
-    public boolean updateKhoa(String maKhoa, String tenKhoa, String maBS, String moTa) {
+    public boolean updateKhoa(int id, String tenKhoa, String moTa, double giaTien) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-
         values.put("tenKhoa", tenKhoa);
-        values.put("maBS", maBS);
         values.put("moTa", moTa);
-
-        int result = db.update("Khoa", values, "maKhoa = ?", new String[]{maKhoa});
+        values.put("giatien", giaTien);
+        int result = db.update("Khoa", values, "id = ?", new String[]{String.valueOf(id)});
         db.close();
         return result > 0;
     }
-
     // Xóa khoa
-    public boolean deleteKhoa(String maKhoa) {
+    public boolean deleteKhoa(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        int result = db.delete("Khoa", "maKhoa = ?", new String[]{maKhoa});
+        int result = db.delete("Khoa", "id = ?", new String[]{String.valueOf(id)});
         db.close();
         return result > 0;
     }
 
-    // Lấy danh sách khoa với thông tin bác sĩ
-    public List<KhoaWithBacSi> getAllKhoaWithBacSi() {
-        List<KhoaWithBacSi> list = new ArrayList<>();
+    // Lấy danh sách tất cả các khoa
+    public List<Khoa> getAllKhoa() {
+        List<Khoa> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-
-        String query = "SELECT K.maKhoa, K.tenKhoa, K.maBS, B.tenBS, K.moTa " +
-                "FROM Khoa K LEFT JOIN BacSi B ON K.maBS = B.maBS " +
-                "ORDER BY K.maKhoa";
-
+        String query = "SELECT id, tenKhoa, moTa, giatien FROM Khoa ORDER BY id";
         Cursor cursor = db.rawQuery(query, null);
-
         while (cursor.moveToNext()) {
-            KhoaWithBacSi info = new KhoaWithBacSi(
-                    cursor.getString(0),
-                    cursor.getString(1),
-                    cursor.getString(2),
-                    cursor.getString(3),
-                    cursor.getString(4)
-            );
-            list.add(info);
+            list.add(new Khoa(
+                    cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("tenKhoa")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("moTa")),
+                    cursor.getDouble(cursor.getColumnIndexOrThrow("giatien"))
+            ));
         }
-
         cursor.close();
         db.close();
         return list;
     }
-
-    // Model cho thông tin khoa kèm tên bác sĩ
-    public static class KhoaWithBacSi {
-        private String maKhoa;
-        private String tenKhoa;
-        private String maBS;
-        private String tenBS;
-        private String moTa;
-
-        public KhoaWithBacSi(String maKhoa, String tenKhoa, String maBS, String tenBS, String moTa) {
-            this.maKhoa = maKhoa;
-            this.tenKhoa = tenKhoa;
-            this.maBS = maBS;
-            this.tenBS = tenBS;
-            this.moTa = moTa;
-        }
-
-        // Getter methods
-        public String getMaKhoa() { return maKhoa; }
-        public String getTenKhoa() { return tenKhoa; }
-        public String getMaBS() { return maBS; }
-        public String getTenBS() { return tenBS; }
-        public String getMoTa() { return moTa; }
-    }
-// Thêm vào DatabaseHelper.java
-
     // Tìm kiếm khoa
-    public List<KhoaWithBacSi> timKiemKhoa(String keyword) {
-        List<KhoaWithBacSi> ketQua = new ArrayList<>();
+    public List<Khoa> timKiemKhoa(String keyword) {
+        List<Khoa> ketQua = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-
-        String query = "SELECT K.maKhoa, K.tenKhoa, K.maBS, B.tenBS, K.moTa " +
-                "FROM Khoa K LEFT JOIN BacSi B ON K.maBS = B.maBS " +
-                "WHERE K.maKhoa LIKE ? OR K.tenKhoa LIKE ? OR B.tenBS LIKE ? " +
-                "ORDER BY K.maKhoa";
-
+        String query = "SELECT id, tenKhoa, moTa, giatien FROM Khoa " +
+                "WHERE tenKhoa LIKE ? OR moTa LIKE ? " +
+                "ORDER BY id";
         Cursor cursor = db.rawQuery(query, new String[]{
-                "%" + keyword + "%",
                 "%" + keyword + "%",
                 "%" + keyword + "%"
         });
-
         while (cursor.moveToNext()) {
-            ketQua.add(new KhoaWithBacSi(
-                    cursor.getString(0),
-                    cursor.getString(1),
-                    cursor.getString(2),
-                    cursor.getString(3),
-                    cursor.getString(4)
+            ketQua.add(new Khoa(
+                    cursor.getInt(cursor.getColumnIndexOrThrow("id")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("tenKhoa")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("moTa")),
+                    cursor.getDouble(cursor.getColumnIndexOrThrow("giatien"))
             ));
         }
-
         cursor.close();
         db.close();
         return ketQua;

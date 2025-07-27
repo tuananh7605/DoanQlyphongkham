@@ -14,8 +14,6 @@ import com.example.doanphongkham.Database.DatabaseHelper;
 import com.example.doanphongkham.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.Calendar;
-
 public class QuanLyTaiKhoan_TemThongTinTaiKhoanActivity extends AppCompatActivity {
 
     private static final String KEY_ACCOUNT_TYPE = QuanLyTaiKhoan_TaoTaiKhoanActivity.KEY_ACCOUNT_TYPE;
@@ -59,9 +57,6 @@ public class QuanLyTaiKhoan_TemThongTinTaiKhoanActivity extends AppCompatActivit
         edtDiaChi = findViewById(R.id.taotaikhoan_themthongtinnhanvien_textbox_diachi);
         spinnerGioiTinh = findViewById(R.id.taotaikhoan_themthongtinnhanvien_spinner_gioitinh);
         btnSave = findViewById(R.id.taotaikhoan_themthongtinnhanvien_button_save);
-
-        // Cho phép người dùng nhập ngày sinh bằng tay
-        // Không cần setKeyListener(null) và không thiết lập DatePicker
     }
 
     private void processIntentData() {
@@ -115,9 +110,14 @@ public class QuanLyTaiKhoan_TemThongTinTaiKhoanActivity extends AppCompatActivit
             return false;
         }
 
-        boolean isInserted = loaiTaiKhoan.equalsIgnoreCase("Bác Sĩ") ?
-                databaseHelper.insertBacSi(maNV, tenNV, gioiTinh, sdt, ngaySinh, diaChi, email) :
-                databaseHelper.insertNhanVien(maNV, tenNV, gioiTinh, sdt, ngaySinh, diaChi, email);
+        boolean isInserted;
+        if (loaiTaiKhoan.equalsIgnoreCase("Bác Sĩ")) {
+            isInserted = databaseHelper.insertBacSi(maNV, tenNV, gioiTinh, sdt, ngaySinh, diaChi, email);
+        } else if (loaiTaiKhoan.equalsIgnoreCase("Kế Toán")) {
+            isInserted = databaseHelper.insertKeToan(maNV, tenNV, gioiTinh, sdt, ngaySinh, diaChi, email);
+        } else {
+            isInserted = databaseHelper.insertNhanVien(maNV, tenNV, gioiTinh, sdt, ngaySinh, diaChi, email);
+        }
 
         if (isInserted) {
             Toast.makeText(this, "Lưu thông tin thành công", Toast.LENGTH_SHORT).show();

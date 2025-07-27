@@ -3,9 +3,7 @@ package com.example.doanphongkham.Admin;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,15 +12,12 @@ import com.example.doanphongkham.Database.DatabaseHelper;
 import com.example.doanphongkham.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.List;
-
 public class QuanLyKhoa_SuaActivity extends AppCompatActivity {
 
-    private EditText edtMaKhoa, edtTenKhoa, edtMoTa;
-    private Spinner spinnerBacSi;
+    private EditText edtgiatienKhoa, edtTenKhoa, edtMoTa;
     private FloatingActionButton btnLuu, btnXoa;
     private DatabaseHelper dbHelper;
-    private String maKhoa;
+    private int maKhoaId; // Thay đổi từ String sang int để phù hợp với ID của Khoa
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,29 +25,29 @@ public class QuanLyKhoa_SuaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quan_ly_khoa_sua);
 
         // Ánh xạ view
-        edtMaKhoa = findViewById(R.id.themlophocphan_textbox_maKhoa);
         edtTenKhoa = findViewById(R.id.themlophocphan_textbox_tenKhoa);
-        spinnerBacSi = findViewById(R.id.themlophocphan_spinner_giangvien);
+        edtgiatienKhoa = findViewById(R.id.themlophocphan_textbox_giatienKhoa);
         edtMoTa = findViewById(R.id.themKhoa_textbox_MoTa);
         btnLuu = findViewById(R.id.thongtinlophocphan_button_luu);
         btnXoa = findViewById(R.id.thongtinlophocphan_button_xoa);
 
         dbHelper = new DatabaseHelper(this);
 
-        // Load danh sách bác sĩ vào Spinner
-        loadDanhSachBacSi();
-
         // Nhận dữ liệu từ Intent
         Intent intent = getIntent();
-        maKhoa = intent.getStringExtra("MA_KHOA");
-        edtMaKhoa.setText(maKhoa);
-        edtTenKhoa.setText(intent.getStringExtra("TEN_KHOA"));
-        edtMoTa.setText(intent.getStringExtra("MO_TA"));
+        maKhoaId = intent.getIntExtra("MA_KHOA_ID", -1); // Lấy ID là int
+        String tenKhoa = intent.getStringExtra("TEN_KHOA");
+        String moTa = intent.getStringExtra("MO_TA");
+        double giaTien = intent.getDoubleExtra("GIA_TIEN", 0.0); // Lấy giá tiền
 
-        // Chọn bác sĩ hiện tại trong Spinner
-        String currentMaBS = intent.getStringExtra("MA_BS");
-        if (currentMaBS != null) {
-            setSpinnerSelection(spinnerBacSi, currentMaBS);
+        // Hiển thị dữ liệu lên EditText
+        if (maKhoaId != -1) {
+            edtTenKhoa.setText(tenKhoa);
+            edtMoTa.setText(moTa);
+            edtgiatienKhoa.setText(String.valueOf(giaTien)); // Chuyển double sang String
+        } else {
+            Toast.makeText(this, "Không tìm thấy thông tin khoa", Toast.LENGTH_SHORT).show();
+            finish(); // Đóng activity nếu không có ID hợp lệ
         }
 
         // Xử lý sự kiện
@@ -60,47 +55,25 @@ public class QuanLyKhoa_SuaActivity extends AppCompatActivity {
         btnXoa.setOnClickListener(v -> xoaKhoa());
     }
 
-    private void loadDanhSachBacSi() {
-        List<DatabaseHelper.BacSiSpinner> danhSachBacSi = dbHelper.getAllBacSiForSpinner();
-        ArrayAdapter<DatabaseHelper.BacSiSpinner> adapter = new ArrayAdapter<DatabaseHelper.BacSiSpinner>(
-                this,
-                android.R.layout.simple_spinner_item,
-                danhSachBacSi);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerBacSi.setAdapter(adapter);
-    }
-
-    private void setSpinnerSelection(Spinner spinner, String maBS) {
-        @SuppressWarnings("unchecked")
-        ArrayAdapter<DatabaseHelper.BacSiSpinner> adapter = (ArrayAdapter<DatabaseHelper.BacSiSpinner>) spinner.getAdapter();
-        for (int i = 0; i < adapter.getCount(); i++) {
-            DatabaseHelper.BacSiSpinner item = adapter.getItem(i);
-            if (item != null && item.getMaBS().equals(maBS)) {
-                spinner.setSelection(i);
-                break;
-            }
-        }
-    }
-
     private void luuThongTin() {
         String tenKhoa = edtTenKhoa.getText().toString().trim();
-
-        @SuppressWarnings("unchecked")
-        DatabaseHelper.BacSiSpinner selectedBacSi = (DatabaseHelper.BacSiSpinner) spinnerBacSi.getSelectedItem();
-        String maBS = selectedBacSi != null ? selectedBacSi.getMaBS() : null;
         String moTa = edtMoTa.getText().toString().trim();
+        double giaTien;
 
         if (tenKhoa.isEmpty()) {
             Toast.makeText(this, "Vui lòng nhập tên khoa", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        boolean result = dbHelper.updateKhoa(
-                maKhoa,
-                tenKhoa,
-                maBS,
-                moTa
-        );
+        try {
+            giaTien = Double.parseDouble(edtgiatienKhoa.getText().toString().trim());
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Giá tiền không hợp lệ", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Gọi phương thức updateKhoa từ DatabaseHelper
+        boolean result = dbHelper.updateKhoa(maKhoaId, tenKhoa, moTa, giaTien);
 
         if (result) {
             Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
@@ -111,7 +84,8 @@ public class QuanLyKhoa_SuaActivity extends AppCompatActivity {
     }
 
     private void xoaKhoa() {
-        boolean result = dbHelper.deleteKhoa(maKhoa);
+        // Gọi phương thức deleteKhoa từ DatabaseHelper
+        boolean result = dbHelper.deleteKhoa(maKhoaId);
         if (result) {
             Toast.makeText(this, "Xóa khoa thành công", Toast.LENGTH_SHORT).show();
             finish();

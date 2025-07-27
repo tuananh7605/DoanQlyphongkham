@@ -40,7 +40,7 @@ public class DanhSachTaiKhoanActivity extends AppCompatActivity {
 
     // Data
     private ArrayList<String> danhSachTaiKhoan = new ArrayList<>();
-    private String[] loaiTaiKhoan = {"Tất cả", "Bác sĩ", "Nhân viên"};
+    private String[] loaiTaiKhoan = {"Tất cả", "Bác sĩ", "Nhân viên", "Kế Toán"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +113,7 @@ public class DanhSachTaiKhoanActivity extends AppCompatActivity {
             // Chỉ lấy bác sĩ và nhân viên, không lấy tài khoản thông thường
             danhSachTaiKhoan.addAll(databaseHelper.getAllBacSi());
             danhSachTaiKhoan.addAll(databaseHelper.getAllNhanVien());
+            danhSachTaiKhoan.addAll(databaseHelper.getAllKeToan());
         }
         else if (loai.equals("Bác sĩ")) {
             // Chỉ lấy bác sĩ
@@ -122,7 +123,10 @@ public class DanhSachTaiKhoanActivity extends AppCompatActivity {
             // Chỉ lấy nhân viên
             danhSachTaiKhoan.addAll(databaseHelper.getAllNhanVien());
         }
-
+        else if (loai.equals("Kế Toán")) {
+            // Chỉ lấy nhân viên
+            danhSachTaiKhoan.addAll(databaseHelper.getAllKeToan());
+        }
         // Cập nhật ListView
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, danhSachTaiKhoan);
@@ -145,6 +149,7 @@ public class DanhSachTaiKhoanActivity extends AppCompatActivity {
             // Tìm trong cả bác sĩ và nhân viên
             searchInTable(db, "BacSi", "maBS", "tenBS", keyword);
             searchInTable(db, "NhanVien", "maNV", "tenNV", keyword);
+            searchInTable(db, "keToan", "maKT", "tenKT", keyword);
         }
         else if (loai.equals("Bác sĩ")) {
             searchInTable(db, "BacSi", "maBS", "tenBS", keyword);
@@ -152,7 +157,9 @@ public class DanhSachTaiKhoanActivity extends AppCompatActivity {
         else if (loai.equals("Nhân viên")) {
             searchInTable(db, "NhanVien", "maNV", "tenNV", keyword);
         }
-
+        else if (loai.equals("Kế Toán")) {
+            searchInTable(db, "keToan", "maKT", "tenKT", keyword);
+        }
         db.close();
 
         // Cập nhật ListView
@@ -215,14 +222,20 @@ public class DanhSachTaiKhoanActivity extends AppCompatActivity {
                         }
                     }
                     if (!loai.equals("Bác sĩ")) {
-                        loai = "Nhân viên";
+                        for (String staff : databaseHelper.getAllNhanVien()) {
+                            if (staff.startsWith(ma)) {
+                                loai = "Nhân viên";
+                                break;
+                            }
+                        }
                     }
                 }
-
                 if (loai.equals("Bác sĩ")) {
-                    hienThiThongTinBacSi(ma,ten);
-                } else {
-                    hienThiThongTinNhanVien(ma,ten);
+                    hienThiThongTinBacSi(ma, ten);
+                } else if (loai.equals("Nhân viên")) {
+                    hienThiThongTinNhanVien(ma, ten);
+                } else if (loai.equals("Kế Toán")) {
+                    hienThiThongTinKeToan(ma, ten); // Thêm hiển thị thông tin kế toán
                 }
             }
         });
@@ -243,24 +256,6 @@ public class DanhSachTaiKhoanActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-       /* builder.setNeutralButton("Sửa", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Open edit activity
-                Intent intent = new Intent(DanhSachTaiKhoanActivity.this, DanhSachTaiKhoan_ThongTinActivity.class);
-                intent.putExtra("MA_BS", maBS);
-                startActivity(intent);
-            }
-        });
-
-        builder.setNegativeButton("Xóa", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                xacNhanXoaBacSi(maBS);
-            }
-        });*/
-
         builder.show();
     }
 
@@ -279,71 +274,24 @@ public class DanhSachTaiKhoanActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-       /* builder.setNeutralButton("Sửa", new DialogInterface.OnClickListener() {
+        builder.show();
+    }
+    private void hienThiThongTinKeToan(String maKT, String tenKT) {
+        // Show accountant info dialog with options
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Thông tin kế toán");
+        builder.setMessage("Mã: " + maKT + "\nTên: " + tenKT);
+        builder.setPositiveButton("Xem chi tiết", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // Open edit activity
+                // Open detail activity
                 Intent intent = new Intent(DanhSachTaiKhoanActivity.this, DanhSachTaiKhoan_ThongTinActivity.class);
-                intent.putExtra("MA_NV", maNV);
+                intent.putExtra("MA_KT", maKT);
                 startActivity(intent);
             }
         });
-
-        builder.setNegativeButton("Xóa", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                xacNhanXoaNhanVien(maNV);
-            }
-        });*/
-
         builder.show();
     }
-
-   /* private void xacNhanXoaBacSi(final String maBS) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Xác nhận xóa");
-        builder.setMessage("Bạn có chắc chắn muốn xóa bác sĩ này?");
-
-        builder.setPositiveButton("Xóa", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                boolean result = databaseHelper.deleteBacSi(maBS);
-                if (result) {
-                    Toast.makeText(DanhSachTaiKhoanActivity.this, "Đã xóa bác sĩ", Toast.LENGTH_SHORT).show();
-                    taiLaiDanhSach();
-                } else {
-                    Toast.makeText(DanhSachTaiKhoanActivity.this, "Xóa thất bại", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        builder.setNegativeButton("Hủy", null);
-        builder.show();
-    }
-
-    private void xacNhanXoaNhanVien(final String maNV) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Xác nhận xóa");
-        builder.setMessage("Bạn có chắc chắn muốn xóa nhân viên này?");
-
-        builder.setPositiveButton("Xóa", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                boolean result = databaseHelper.deleteNhanVien(maNV);
-                if (result) {
-                    Toast.makeText(DanhSachTaiKhoanActivity.this, "Đã xóa nhân viên", Toast.LENGTH_SHORT).show();
-                    taiLaiDanhSach();
-                } else {
-                    Toast.makeText(DanhSachTaiKhoanActivity.this, "Xóa thất bại", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        builder.setNegativeButton("Hủy", null);
-        builder.show();
-    }*/
-
     private void taiLaiDanhSach() {
         String loai = spnLoaiTaiKhoan.getSelectedItem().toString();
         taiDanhSachTaiKhoan(loai);
