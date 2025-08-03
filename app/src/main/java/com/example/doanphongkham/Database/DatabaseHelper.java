@@ -9,6 +9,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.example.doanphongkham.KeToan.RevenueItem;
 import com.example.doanphongkham.Model.DaKhamXong;
 import com.example.doanphongkham.Model.KhachHang;
 import com.example.doanphongkham.Model.Khoa;
@@ -20,7 +21,7 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "PhongkhamDB";
-    private static final int DATABASE_VERSION =33;
+    private static final int DATABASE_VERSION =34;
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -70,6 +71,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "PhongKham TEXT, " +
                 "TongTien REAL DEFAULT 0" +
                 ");";
+        String CREATE_TABLE_DOANH_THU = "CREATE TABLE IF NOT EXISTS DoanhThu (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "date TEXT, " +
+                "amount REAL)";
+        db.execSQL(CREATE_TABLE_DOANH_THU);
+
 
 
 
@@ -322,6 +329,37 @@ db.execSQL("DROP TABLE IF EXISTS KeToan");
         long result = db.insert("Thuoc", null, values);
         return result != -1;
     }
+    public List<String> getAllTenKhoa() {
+        List<String> khoaList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT tenKhoa FROM Khoa", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                khoaList.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return khoaList;
+    }
+    public double getGiaPhongKham(String tenKhoa) {
+        double gia = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT giatien FROM Khoa WHERE tenKhoa = ?", new String[]{tenKhoa});
+        if (cursor.moveToFirst()) {
+            gia = cursor.getDouble(0);
+        }
+        cursor.close();
+        db.close();
+        return gia;
+    }
+
+
+
+
+
     //
     public List<DaKhamXong> getAllDaKhamXongList() {
         List<DaKhamXong> list = new ArrayList<>();
@@ -354,22 +392,104 @@ db.execSQL("DROP TABLE IF EXISTS KeToan");
                                     String tienSuBenh, String phongKham, double tongTien) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("tenBenhNhan", tenBenhNhan);
-        values.put("sdt", sdt);
-        values.put("ngaySinh", ngaySinh);
-        values.put("ngayKham", ngayKham);
-        values.put("tienSuBenh", tienSuBenh);
-        values.put("phongKham", phongKham);
-        values.put("tongTien", tongTien);
+        values.put("TenBenhNhan", tenBenhNhan);
+        values.put("SDT", sdt);
+        values.put("NgaySinh", ngaySinh);
+        values.put("NgayKham", ngayKham);
+        values.put("TienSuBenh", tienSuBenh);
+        values.put("PhongKham", phongKham);
+        values.put("TongTien", tongTien);
+
         long result = db.insert("DaKhamXong", null, values);
+
+        if (result != -1) {
+            // Tự động cộng vào bảng DoanhThu
+            insertOrUpdateDoanhThu(ngayKham, tongTien);
+        }
+
+        db.close();
         return result != -1;
     }
+    private void insertOrUpdateDoanhThu(String date, double amount) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT id, amount FROM DoanhThu WHERE date = ?", new String[]{date});
+
+        if (cursor.moveToFirst()) {
+            int id = cursor.getInt(0);
+            double currentAmount = cursor.getDouble(1);
+            ContentValues values = new ContentValues();
+            values.put("amount", currentAmount + amount);
+            db.update("DoanhThu", values, "id = ?", new String[]{String.valueOf(id)});
+        } else {
+            ContentValues values = new ContentValues();
+            values.put("date", date);
+            values.put("amount", amount);
+            db.insert("DoanhThu", null, values);
+        }
+
+        cursor.close();
+    }
+    public List<RevenueItem> getAllDoanhThu() {
+        List<RevenueItem> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM DoanhThu", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                String date = cursor.getString(1);
+                double amount = cursor.getDouble(2);
+                list.add(new RevenueItem(id, date, amount));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return list;
+    }
+    // ✅ Thêm vào DatabaseHelper.java
+    public List<DaKhamXong> getDaKhamXongTheoNgay(String ngayKham) {
+        List<DaKhamXong> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM DaKhamXong WHERE NgayKham = ?",
+                new String[]{ngayKham}
+        );
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+                String tenBenhNhan = cursor.getString(cursor.getColumnIndexOrThrow("TenBenhNhan"));
+                String ngaySinh = cursor.getString(cursor.getColumnIndexOrThrow("NgaySinh"));
+                String sdt = cursor.getString(cursor.getColumnIndexOrThrow("SDT"));
+                String phongKham = cursor.getString(cursor.getColumnIndexOrThrow("PhongKham"));
+                String tienSuBenh = cursor.getString(cursor.getColumnIndexOrThrow("TienSuBenh"));
+                String ngay = cursor.getString(cursor.getColumnIndexOrThrow("NgayKham"));
+                double tongTien = cursor.getDouble(cursor.getColumnIndexOrThrow("TongTien"));
+
+                list.add(new DaKhamXong(id, tenBenhNhan, ngaySinh, sdt, phongKham, tienSuBenh, ngay, tongTien));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return list;
+    }
+
+
+
+
+
+
+
     public boolean deleteDaKhamXong(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         int result = db.delete("DaKhamXong", "id = ?", new String[]{String.valueOf(id)});
         db.close();
         return result > 0;
     }
+
+
 
 
 

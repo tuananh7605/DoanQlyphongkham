@@ -9,6 +9,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.doanphongkham.Adapter.DaKhamXongAdapter;
+import com.example.doanphongkham.Database.DatabaseHelper;
+import com.example.doanphongkham.Model.DaKhamXong;
 import com.example.doanphongkham.R;
 import com.google.android.material.button.MaterialButton;
 
@@ -20,8 +23,8 @@ public class DoanhThuActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     TextView tvTongDoanhThu, tvChonNgay;
     MaterialButton btnBack;
-    Database db;
-    List<HoaDon> hoaDonList;
+    DatabaseHelper db;
+    List<DaKhamXong> hoaDonList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,21 +35,19 @@ public class DoanhThuActivity extends AppCompatActivity {
         tvTongDoanhThu = findViewById(R.id.tvTongDoanhThu);
         tvChonNgay = findViewById(R.id.tvChonNgay);
         btnBack = findViewById(R.id.btnBack);
-        db = new Database(this);
 
+        db = new DatabaseHelper(this);
 
         btnBack.setOnClickListener(v -> {
             Intent intent = new Intent(DoanhThuActivity.this, MainKeToanActivity.class);
             startActivity(intent);
-            finish(); // Kết thúc activity hiện tại
+            finish();
         });
-
 
         String today = getTodayDate();
         tvChonNgay.setText("Ngày đã chọn: " + today);
         loadHoaDonTheoNgay(today);
 
-        // Chọn ngày bằng DatePicker
         tvChonNgay.setOnClickListener(v -> showDatePicker());
     }
 
@@ -57,7 +58,7 @@ public class DoanhThuActivity extends AppCompatActivity {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePicker = new DatePickerDialog(this, (view, y, m, d) -> {
-            String selectedDate = String.format("%04d-%02d-%02d", y, m + 1, d);
+            String selectedDate = String.format("%02d/%02d/%04d", d, m + 1, y);
             tvChonNgay.setText("Ngày đã chọn: " + selectedDate);
             loadHoaDonTheoNgay(selectedDate);
         }, year, month, day);
@@ -66,23 +67,24 @@ public class DoanhThuActivity extends AppCompatActivity {
     }
 
     private void loadHoaDonTheoNgay(String ngay) {
-        hoaDonList = db.getHoaDonTheoNgay(ngay);
+        hoaDonList = db.getDaKhamXongTheoNgay(ngay);
 
         double tong = 0;
-        for (HoaDon hd : hoaDonList) {
+        for (DaKhamXong hd : hoaDonList) {
             tong += hd.getTongTien();
         }
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new HoaDonAdapter(this, hoaDonList));
+        recyclerView.setAdapter(new DaKhamXongAdapter(this, hoaDonList));
         tvTongDoanhThu.setText("Tổng doanh thu ngày " + ngay + ": " + tong + " VNĐ");
     }
 
     private String getTodayDate() {
         Calendar calendar = Calendar.getInstance();
-        return String.format("%04d-%02d-%02d",
-                calendar.get(Calendar.YEAR),
+        return String.format("%02d/%02d/%04d",
+                calendar.get(Calendar.DAY_OF_MONTH),
                 calendar.get(Calendar.MONTH) + 1,
-                calendar.get(Calendar.DAY_OF_MONTH));
+                calendar.get(Calendar.YEAR));
     }
+
 }

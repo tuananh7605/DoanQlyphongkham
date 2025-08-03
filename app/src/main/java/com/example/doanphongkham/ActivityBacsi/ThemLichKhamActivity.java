@@ -3,9 +3,11 @@ package com.example.doanphongkham.ActivityBacsi;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,9 +15,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.doanphongkham.Database.DatabaseHelper;
 import com.example.doanphongkham.R;
 
+import java.util.List;
+
 public class ThemLichKhamActivity extends AppCompatActivity {
 
-    EditText edtTenBenhNhan, edtNgayKham, edtGioKham, edtTienSuBenh, edtPhongKham;
+    EditText edtTenBenhNhan, edtNgayKham, edtGioKham, edtTienSuBenh;
+    Spinner spinnerPhongKham;
+    List<String> danhSachKhoa;
     EditText edtSDTBenhNhan, edtNgaySinhBenhNhan;
     Button btnThemLichKham;
     DatabaseHelper databaseHelper;
@@ -31,7 +37,7 @@ public class ThemLichKhamActivity extends AppCompatActivity {
         edtNgayKham = findViewById(R.id.edtNgayKham);
         edtGioKham = findViewById(R.id.edtGioKham);
         edtTienSuBenh = findViewById(R.id.edtTienSuBenh);
-        edtPhongKham = findViewById(R.id.edtPhongKham);
+        spinnerPhongKham = findViewById(R.id.spinnerPhongKham);
         btnThemLichKham = findViewById(R.id.btnThemLichKham);
         ImageButton btnBack = findViewById(R.id.btnBack);
 
@@ -39,6 +45,20 @@ public class ThemLichKhamActivity extends AppCompatActivity {
 
         databaseHelper = new DatabaseHelper(this);
 
+        // Load danh sách phòng khám vào Spinner
+        danhSachKhoa = databaseHelper.getAllTenKhoa();
+        if (danhSachKhoa.isEmpty()) {
+            danhSachKhoa.add("Chưa có phòng khám nào");
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                danhSachKhoa
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerPhongKham.setAdapter(adapter);
+
+        //lay du lieu tu intent
         Intent intent = getIntent();
         boolean isUpdate = intent.getBooleanExtra("isUpdate", false);
 
@@ -59,7 +79,9 @@ public class ThemLichKhamActivity extends AppCompatActivity {
             edtNgayKham.setText(ngay);
             edtGioKham.setText(gio);
             edtTienSuBenh.setText(tienSu);
-            edtPhongKham.setText(phong);
+            // Chọn đúng phòng khám trong Spinner
+            int index = danhSachKhoa.indexOf(phong);
+            if (index >= 0) spinnerPhongKham.setSelection(index);
 
             btnThemLichKham.setText("Cập nhật");
 
@@ -70,7 +92,7 @@ public class ThemLichKhamActivity extends AppCompatActivity {
                 String ngayKham = edtNgayKham.getText().toString().trim();
                 String gioKham = edtGioKham.getText().toString().trim();
                 String tienSuBenh = edtTienSuBenh.getText().toString().trim();
-                String phongKham = edtPhongKham.getText().toString().trim();
+                String phongKham = spinnerPhongKham.getSelectedItem().toString();
 
 
                 boolean updated = databaseHelper.updateLichKham(id, tenBN, sdtBN, ngaySinhBN, ngayKham, gioKham, tienSuBenh, phongKham);
@@ -90,7 +112,7 @@ public class ThemLichKhamActivity extends AppCompatActivity {
                 String ngay = edtNgayKham.getText().toString().trim();
                 String gio = edtGioKham.getText().toString().trim();
                 String tienSu = edtTienSuBenh.getText().toString().trim();
-                String phong = edtPhongKham.getText().toString().trim();
+                String phong = spinnerPhongKham.getSelectedItem().toString();
 
 
                 if (ten.isEmpty() || ngay.isEmpty() || gio.isEmpty()) {

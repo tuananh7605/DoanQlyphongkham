@@ -88,11 +88,11 @@
             android:layout_height="wrap_content"
             android:hint="Tiền sử bệnh" />
 
-        <EditText
-            android:id="@+id/edtPhongKham"
+        <Spinner
+            android:id="@+id/spinnerPhongKham"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Phòng khám" />
+            android:spinnerMode="dropdown" />
 
         <Button
             android:id="@+id/btnThemLichKham"

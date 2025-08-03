@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -40,14 +39,7 @@
             android:exported="false" />
         <activity
             android:name=".Admin.QuanLyTrangChinhActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
+            android:exported="false"/>
         <activity
             android:name=".Admin.QuanLyTaiKhoan_TemThongTinTaiKhoanActivity"
             android:exported="false" />
@@ -81,8 +73,12 @@
             android:exported="false" />
         <activity
             android:name=".ActivityBacsi.MainActivity"
-            android:exported="false">
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

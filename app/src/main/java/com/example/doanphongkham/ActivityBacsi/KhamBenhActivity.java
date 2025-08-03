@@ -35,6 +35,7 @@ public class KhamBenhActivity extends AppCompatActivity {
     List<Thuoc> thuocList;
     DatabaseHelper dbHelper;
     private boolean isUpdating = false;
+    private double giaPhongKham = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +73,22 @@ public class KhamBenhActivity extends AppCompatActivity {
         tvGioKham.setText("Giờ khám: " + gio);
         tvTienSuBenh.setText("Tiền sử bệnh: " + tiensu);
         tvPhongKham.setText("Phòng khám: " + phong);
+        tvPhongKham.setText("Phòng khám: " + phong);
+
+
 
         btnBack.setOnClickListener(v -> finish());
 
         dbHelper = new DatabaseHelper(this);
+
+
+
+        // Lấy giá phòng khám
+        if (phong != null && !phong.trim().isEmpty()) {
+            giaPhongKham = dbHelper.getGiaPhongKham(phong);
+        }
+        TextView tvGiaPhongKham = findViewById(R.id.tvGiaPhongKham);
+        tvGiaPhongKham.setText(String.format("(%,.0f đ)", giaPhongKham));
 
         // Danh sách thuốc có mục chọn đầu tiên
         thuocList = new ArrayList<>();
@@ -87,7 +100,8 @@ public class KhamBenhActivity extends AppCompatActivity {
         setupThuocRow(findViewById(R.id.rowThuoc3));
 
         btnKhamBenh.setOnClickListener(v -> {
-            double tongTien = 0;
+
+            double tongTien = giaPhongKham; // ✅ cộng luôn giá phòng
             tongTien += getTienThuoc(findViewById(R.id.rowThuoc1));
             tongTien += getTienThuoc(findViewById(R.id.rowThuoc2));
             tongTien += getTienThuoc(findViewById(R.id.rowThuoc3));
@@ -152,7 +166,7 @@ public class KhamBenhActivity extends AppCompatActivity {
         if (isUpdating) return;
         isUpdating = true;
 
-        double tong = 0;
+        double tong = giaPhongKham; // ✅ Bắt đầu từ giá phòng khám
         tong += getTienThuoc(findViewById(R.id.rowThuoc1));
         tong += getTienThuoc(findViewById(R.id.rowThuoc2));
         tong += getTienThuoc(findViewById(R.id.rowThuoc3));
@@ -160,6 +174,7 @@ public class KhamBenhActivity extends AppCompatActivity {
         tvTienKhamBenh.setText(String.format("%,.0f đ", tong));
         isUpdating = false;
     }
+
 
     private double getTienThuoc(View row) {
         Spinner spinner = row.findViewById(R.id.spinnerThuoc);

@@ -229,6 +229,12 @@ public class DanhSachTaiKhoanActivity extends AppCompatActivity {
                             }
                         }
                     }
+                    for (String staff : databaseHelper.getAllKeToan()) {
+                        if (staff.startsWith(ma)) {
+                            loai = "Kế Toán";
+                            break;
+                        }
+                    }
                 }
                 if (loai.equals("Bác sĩ")) {
                     hienThiThongTinBacSi(ma, ten);
@@ -240,7 +246,6 @@ public class DanhSachTaiKhoanActivity extends AppCompatActivity {
             }
         });
     }
-
     private void hienThiThongTinBacSi(String maBS,String tenBS) {
         // Show doctor info dialog with options
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
