@@ -1,14 +1,14 @@
 package com.example.doanphongkham.Model;
 
 public class TaiKHoan {
-    private int id;
+    private String maTk;
     private String tenTk;
     private String matKhau;
     private String loaiTK;
     private String TinhTrang;
     private String mail;
-    public TaiKHoan(int id, String tenTk, String matKhau, String loaiTK, String tinhTrang, String mail) {
-        this.id = id;
+    public TaiKHoan(String maTk, String tenTk, String matKhau, String loaiTK, String tinhTrang, String mail) {
+        this.maTk = maTk;
         this.tenTk = tenTk;
         this.matKhau = matKhau;
         this.loaiTK = loaiTK;
@@ -23,13 +23,9 @@ public class TaiKHoan {
         this.tenTk = tenTk;
     }
 
-    public int getId() {
-        return id;
-    }
+    public String getMaTk() {return maTk;}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public void setMaTk(String maTk) {this.maTk = maTk;}
 
     public String getMatKhau() {
         return matKhau;
