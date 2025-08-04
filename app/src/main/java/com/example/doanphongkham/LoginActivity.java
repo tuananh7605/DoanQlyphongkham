@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish(); // Close LoginActivity
-                    } else if (userType.equals("Kế toán")) {
+                    } else if (userType.equals("Kế Toán")) {
                         Toast.makeText(LoginActivity.this, "Đăng nhập thành công với vai trò " + userType + "!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(LoginActivity.this, MainKeToanActivity.class);
                         startActivity(intent);
