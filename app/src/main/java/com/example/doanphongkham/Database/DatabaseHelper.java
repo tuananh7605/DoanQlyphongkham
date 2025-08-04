@@ -77,10 +77,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "amount REAL)";
         db.execSQL(CREATE_TABLE_DOANH_THU);
 
-
-
-
-
         //admin
         String CREATE_TABLE_Tai_Khoan = "CREATE TABLE TaiKhoan (" +
                 "maTk  TEXT PRIMARY KEY, " +
@@ -134,8 +130,65 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_BAC_SI);
         db.execSQL(CREATE_TABLE_NHAN_VIEN);
         db.execSQL(CREATE_TABLE_KHOA);
-
+        // Thêm tài khoản admin mặc định nếu chưa có
+        insertDefaultAdmin(db);
     }
+    private void insertDefaultAdmin(SQLiteDatabase db) {
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM TaiKhoan WHERE tenTk = ?", new String[]{"admin"});
+        if (cursor != null && cursor.moveToFirst()) {
+            int count = cursor.getInt(0);
+            cursor.close();
+            if (count == 0) {
+                ContentValues values = new ContentValues();
+                values.put("maTk", "AD001");
+                values.put("tenTk", "admin");
+                values.put("mk", "admin123");
+                values.put("loai_TK", "Admin");
+                values.put("mail", "admin@example.com");
+                values.put("tinh_trang", "Active");
+                db.insert("TaiKhoan", null, values);
+            }
+        }
+        insertDefaultBacSi(db);
+    }
+
+     private void insertDefaultBacSi(SQLiteDatabase db) {
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM TaiKhoan WHERE tenTk = ?", new String[]{"bacsi"});
+        if (cursor != null && cursor.moveToFirst()) {
+            int count = cursor.getInt(0);
+            cursor.close();
+          /*  if (count == 0) {
+                ContentValues values = new ContentValues();
+                values.put("maTk", "BS001");
+                values.put("tenTk", "bacsi");
+                values.put("mk", "bacsi123");
+                values.put("loai_TK", "BacSi");
+                values.put("mail", "bacsi@example.com");
+                values.put("tinh_trang", "Active");
+                db.insert("TaiKhoan", null, values);
+            }*/
+        }
+        insertDefaultKeToan(db);
+    }
+
+    private void insertDefaultKeToan(SQLiteDatabase db) {
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM TaiKhoan WHERE tenTk = ?", new String[]{"ketoan"});
+        if (cursor != null && cursor.moveToFirst()) {
+            int count = cursor.getInt(0);
+            cursor.close();
+            if (count == 0) {
+                ContentValues values = new ContentValues();
+                values.put("maTk", "KT001");
+                values.put("tenTk", "ketoan");
+                values.put("mk", "ketoan123");
+                values.put("loai_TK", "Kế toán");
+                values.put("mail", "ketoan@example.com");
+                values.put("tinh_trang", "Active");
+                db.insert("TaiKhoan", null, values);
+            }
+        }
+    }
+    
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS PhieuKhamBenh");
@@ -146,7 +199,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS BacSi");
         db.execSQL("DROP TABLE IF EXISTS NhanVien");
         db.execSQL("DROP TABLE IF EXISTS Khoa");
-db.execSQL("DROP TABLE IF EXISTS KeToan");
+        db.execSQL("DROP TABLE IF EXISTS KeToan");
         onCreate(db);
     }
     //bacsi
@@ -357,9 +410,6 @@ db.execSQL("DROP TABLE IF EXISTS KeToan");
     }
 
 
-
-
-
     //
     public List<DaKhamXong> getAllDaKhamXongList() {
         List<DaKhamXong> list = new ArrayList<>();
@@ -446,7 +496,7 @@ db.execSQL("DROP TABLE IF EXISTS KeToan");
         cursor.close();
         return list;
     }
-    // ✅ Thêm vào DatabaseHelper.java
+    // Thêm vào DatabaseHelper.java
     public List<DaKhamXong> getDaKhamXongTheoNgay(String ngayKham) {
         List<DaKhamXong> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -476,35 +526,12 @@ db.execSQL("DROP TABLE IF EXISTS KeToan");
         return list;
     }
 
-
-
-
-
-
-
     public boolean deleteDaKhamXong(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         int result = db.delete("DaKhamXong", "id = ?", new String[]{String.valueOf(id)});
         db.close();
         return result > 0;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     //admin
@@ -992,6 +1019,24 @@ db.execSQL("DROP TABLE IF EXISTS KeToan");
             // KHÔNG đóng db ở đây
         }
         return email;
+    }
+  public String checkUser(String username, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String userType = null;
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT loai_TK FROM TaiKhoan WHERE maTk = ? AND mk = ?", new String[]{username, password});
+            if (cursor.moveToFirst()) {
+                userType = cursor.getString(0);
+                Log.d("DatabaseHelper", "Raw userType from DB: " + userType);
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
+        }
+        return userType;
     }
 
 }
