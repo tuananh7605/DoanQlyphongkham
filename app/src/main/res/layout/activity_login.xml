@@ -20,21 +20,23 @@
         android:textSize="34sp"
         android:textStyle="bold|italic"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
     <EditText
-        android:id="@+id/username"
+        android:id="@+id/maTk"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="224dp"
-        android:autofillHints="@string/prompt_email"
-        android:hint="@string/prompt_email"
+
+        android:hint="Mã Tài Khoản"
+        android:importantForAutofill="no"
         android:inputType="textEmailAddress"
         android:minHeight="48dp"
         android:selectAllOnFocus="true"
+        android:textColorHint="#546E7A"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +47,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="52dp"
-        android:autofillHints="@string/prompt_password"
         android:hint="@string/prompt_password"
         android:imeActionLabel="@string/action_sign_in_short"
         android:imeOptions="actionDone"
@@ -55,7 +56,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username" />
+        app:layout_constraintTop_toBottomOf="@+id/maTk"
+        tools:ignore="Autofill,VisualLintTextFieldSize" />
 
     <Button
         android:id="@+id/login"
