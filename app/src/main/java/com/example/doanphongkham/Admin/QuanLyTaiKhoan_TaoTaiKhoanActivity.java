@@ -198,7 +198,7 @@ public class QuanLyTaiKhoan_TaoTaiKhoanActivity extends AppCompatActivity {
             return;
         }
 
-        if (!dbHelper.insertTaiKhoan(ma,ten, hashMD5(mk), loai, mail, "Active")) {
+        if (!dbHelper.insertTaiKhoan(ma,ten, mk, loai, mail, "Active")) {
             showToast("Lỗi khi tạo tài khoản");
             return;
         }
@@ -249,20 +249,6 @@ public class QuanLyTaiKhoan_TaoTaiKhoanActivity extends AppCompatActivity {
         }
     }
 
-    private String hashMD5(String input) {
-        try {
-            java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
-            byte[] array = md.digest(input.getBytes());
-            StringBuilder sb = new StringBuilder();
-            for (byte b : array) {
-                sb.append(String.format("%02x", b));
-            }
-            return sb.toString();
-        } catch (java.security.NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
