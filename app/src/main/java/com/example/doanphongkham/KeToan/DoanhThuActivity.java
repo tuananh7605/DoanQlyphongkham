@@ -58,7 +58,7 @@ public class DoanhThuActivity extends AppCompatActivity {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePicker = new DatePickerDialog(this, (view, y, m, d) -> {
-            String selectedDate = String.format("%02d/%02d/%04d", d, m + 1, y);
+            String selectedDate = String.format("%04d/%02d/%02d", y, m + 1, d);
             tvChonNgay.setText("Ngày đã chọn: " + selectedDate);
             loadHoaDonTheoNgay(selectedDate);
         }, year, month, day);
@@ -81,10 +81,9 @@ public class DoanhThuActivity extends AppCompatActivity {
 
     private String getTodayDate() {
         Calendar calendar = Calendar.getInstance();
-        return String.format("%02d/%02d/%04d",
-                calendar.get(Calendar.DAY_OF_MONTH),
+        return String.format("%04d/%02d/%02d",
+                calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH) + 1,
-                calendar.get(Calendar.YEAR));
+                calendar.get(Calendar.DAY_OF_MONTH));
     }
-
 }
